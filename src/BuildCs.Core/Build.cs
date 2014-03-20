@@ -1,46 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
+using BuildCs.Services;
 using ScriptCs.Contracts;
 
 namespace BuildCs
 {
     public class Build : IScriptPackContext
     {
-        private readonly BuildCommandLine _commandLine;
-        private readonly BuildTargetManager _targetManager;
-        private readonly BuildTargetRunner _targetRunner;
-        private IBuildTracer _tracer;
+        private readonly Dictionary<Type, object> _services;
 
-        public Build(BuildCommandLine commandLine, BuildTargetManager targetManager, BuildTargetRunner targetRunner)
+        public Build(IEnumerable<string> args)
         {
-            _commandLine = commandLine;
-            _targetManager = targetManager;
-            _targetRunner = targetRunner;
-            _tracer = new TextWriterBuildTracer(Console.Out);
+            _services = new Dictionary<Type, object>();
+            _services.Add(typeof(Build), this);
+            _services.Add(typeof(BuildCommandLine), new BuildCommandLine(args));
         }
 
-        public IBuildTracer Tracer
+        public T GetService<T>()
         {
-            get { return _tracer; }
+            object service;
+            if (!_services.TryGetValue(typeof(T), out service))
+                service = LoadService(new List<Type>(), typeof(T));
+
+            return (T)service;
         }
 
-        public BuildCommandLine CommandLine
+        private object LoadService(List<Type> loadedTypes, Type type)
         {
-            get { return _commandLine; }
-        }
+            object service;
+            if (_services.TryGetValue(type, out service))
+                return service;
 
-        public BuildTargetRunner Runner
-        {
-            get { return _targetRunner; }
-        }
+            if (loadedTypes.Contains(type))
+                throw new BuildCsException("Cannot resolve service '{0}' because it has a circular dependency on '{1}'.".F(loadedTypes[0], type));
 
-        public BuildTargetManager Targets
-        {
-            get { return _targetManager; }
+            var ctor = type.UnderlyingSystemType.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .OrderByDescending(x => x.GetParameters().Length)
+                .First();
+
+            loadedTypes.Add(type);
+            var parameters = ctor.GetParameters();
+            var args = new List<object>();
+            foreach(var parameter in parameters)
+                args.Add(LoadService(loadedTypes, parameter.ParameterType));
+
+            service = ctor.Invoke(args.ToArray());
+            _services[type] = service;
+            return service;
         }
     }
 }

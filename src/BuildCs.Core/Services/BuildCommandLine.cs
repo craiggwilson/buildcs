@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BuildCs
+namespace BuildCs.Services
 {
     public class BuildCommandLine
     {
         private readonly Dictionary<string, string> _parameters;
-        private readonly List<string> _requestedTargetNames;
+        private readonly List<string> _targetNames;
 
         public BuildCommandLine(IEnumerable<string> args)
         {
-            _requestedTargetNames = args
+            _targetNames = args
                 .TakeWhile(s => !s.Contains('='))
                 .ToList();
 
@@ -22,9 +19,9 @@ namespace BuildCs
                 .ToDictionary(s => s[0], s => s[1]);
         }
 
-        public IReadOnlyList<string> RequestedTargetNames
+        public IReadOnlyList<string> TargetNames
         {
-            get { return _requestedTargetNames; }
+            get { return _targetNames; }
         }
 
         public string GetParameter(string name)

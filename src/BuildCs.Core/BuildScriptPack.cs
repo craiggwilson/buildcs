@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ScriptCs.Contracts;
+﻿using ScriptCs.Contracts;
 
 namespace BuildCs
 {
@@ -18,13 +13,9 @@ namespace BuildCs
 
         public void Initialize(IScriptPackSession session)
         {
-            var commandLine = new BuildCommandLine(session.ScriptArgs);
-            var targetManager = new BuildTargetManager();
-            var targetRunner = new BuildTargetRunner(targetManager);
-
-            _build = new Build(commandLine, targetManager, targetRunner);
-
             session.ImportNamespace("BuildCs");
+
+            _build = new Build(session.ScriptArgs);
         }
 
         public void Terminate()

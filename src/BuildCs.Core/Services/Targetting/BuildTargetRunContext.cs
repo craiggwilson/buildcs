@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BuildCs
+namespace BuildCs.Services.Targetting
 {
+
+
     public class BuildTargetRunContext : BuildContextBase
     {
         private readonly IBuildTarget _target;
         private TimeSpan _duration;
         private Exception _exception;
-        private bool _hasRun;
-        private bool _wasSkipped;
+        private BuildTargetStatus _status;
 
         public BuildTargetRunContext(IBuildTarget target)
         {
@@ -29,14 +26,9 @@ namespace BuildCs
             get { return _exception; }
         }
 
-        public bool HasRun
+        public BuildTargetStatus Status
         {
-            get { return _hasRun; }
-        }
-
-        public bool WasSkipped
-        {
-            get { return _wasSkipped; }
+            get { return _status; }
         }
 
         public IBuildTarget Target
@@ -48,18 +40,18 @@ namespace BuildCs
         {
             _duration = duration;
             _exception = exception;
-            _hasRun = true;
+            _status = BuildTargetStatus.Failed;
         }
 
         internal void MarkSkipped()
         {
-            _hasRun = true;
+            _status = BuildTargetStatus.Skipped;
         }
 
         internal void MarkSuccessful(TimeSpan duration)
         {
             _duration = duration;
-            _hasRun = true;
+            _status = BuildTargetStatus.Success;
         }
     }
 }

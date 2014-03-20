@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BuildCs
+namespace BuildCs.Services.Targetting
 {
     public interface IBuildTargetBuilder : IBuildTarget
     {
@@ -13,5 +9,7 @@ namespace BuildCs
         IBuildTargetBuilder DependsOn(params string[] names);
 
         IBuildTargetBuilder Do(Action action);
+
+        IBuildTargetBuilder Wrap(Action<Action> action);
     }
 }

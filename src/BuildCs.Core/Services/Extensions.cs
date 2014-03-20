@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BuildCs.Services;
 
 namespace BuildCs
 {
-    public static class BuildParametersExtensions
+    public static partial class Extensions
     {
+        public static BuildCommandLine CommandLine(this Build build)
+        {
+            return build.GetService<BuildCommandLine>();
+        }
+
         public static string GetParameter(this Build build, string name)
         {
-            return build.CommandLine.GetParameter(name);
+            return build.CommandLine().GetParameter(name);
         }
 
         public static string GetParameterOrDefault(this Build build, string name, string defaultValue)
         {
-            if (build.CommandLine.HasParameter(name))
+            if (build.CommandLine().HasParameter(name))
                 return build.GetParameter(name);
 
             return defaultValue;
@@ -23,7 +24,7 @@ namespace BuildCs
 
         public static bool HasParameter(this Build build, string name)
         {
-            return build.CommandLine.HasParameter(name);
+            return build.CommandLine().HasParameter(name);
         }
     }
 }

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BuildCs
+namespace BuildCs.Services.Targetting
 {
     public class BuildTarget : IBuildTargetBuilder
     {
         private readonly string _name;
+        private readonly List<Action<Action>> _wrappers;
 
         private Action _action;
         private string _description;
@@ -19,11 +18,7 @@ namespace BuildCs
             _name = name;
             _action = () => { };
             _dependencies = new List<string>();
-        }
-
-        public Action Action
-        {
-            get { return _action; }
+            _wrappers = new List<Action<Action>>();
         }
 
         public string Description
@@ -57,6 +52,21 @@ namespace BuildCs
         {
             _action = action;
             return this;
+        }
+
+        public IBuildTargetBuilder Wrap(Action<Action> action)
+        {
+            _wrappers.Add(action);
+            return this;
+        }
+
+        public void Run()
+        {
+            var current = _action;
+            foreach(var wrapper in _wrappers.Reverse<Action<Action>>())
+                current = () => wrapper(current);
+
+            current();
         }
     }
 

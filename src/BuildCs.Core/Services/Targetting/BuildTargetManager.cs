@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BuildCs
+namespace BuildCs.Services.Targetting
 {
     public class BuildTargetManager
     {
@@ -48,7 +46,7 @@ namespace BuildCs
             var nodes = targetsToBuild
                 .Select(x => new Node
                 {
-                    Name = x,
+                    Target = x,
                     RequiredBy = targetsToBuild.Where(y => y.Dependencies.Contains(x.Name)).ToList()
                 })
                 .ToList();
@@ -63,9 +61,9 @@ namespace BuildCs
                 var n = S.Dequeue();
                 L.Add(n);
 
-                foreach(var m in nodes.Where(x => x.RequiredBy.Contains(n.Name)).ToList())
+                foreach(var m in nodes.Where(x => x.RequiredBy.Contains(n.Target)).ToList())
                 {
-                    m.RequiredBy.Remove(n.Name);
+                    m.RequiredBy.Remove(n.Target);
                     if (m.RequiredBy.Count == 0)
                     {
                         S.Enqueue(m);
@@ -77,7 +75,7 @@ namespace BuildCs
             if (nodes.Any())
                 throw new BuildCsException("A cycle exists in the dependency chain.");
 
-            return L.Select(x => x.Name).Reverse();
+            return L.Select(x => x.Target).Reverse();
         }
 
         public bool HasTarget(string name)
@@ -99,7 +97,7 @@ namespace BuildCs
 
         private class Node
         {
-            public IBuildTargetBuilder Name;
+            public IBuildTargetBuilder Target;
             public List<IBuildTargetBuilder> RequiredBy;
         }
     }
