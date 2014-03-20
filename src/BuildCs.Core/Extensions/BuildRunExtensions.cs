@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BuildCs.Extensions
+namespace BuildCs
 {
     public static class BuildRunExtensions
     {
@@ -13,7 +13,7 @@ namespace BuildCs.Extensions
             build.Runner.RunTargets(build.Tracer, targets);
         }
 
-        public static void RunTargetsOrDefault(this Build build, string defaultTarget)
+        public static void RunTargetOrDefault(this Build build, string defaultTarget)
         {
             var targetNames = build.CommandLine.RequestedTargetNames;
             if (targetNames.Count == 0)

@@ -19,12 +19,12 @@ namespace BuildCs
 
         public void RunTargets(IBuildTracer tracer, IEnumerable<string> requestedTargets)
         {
-
-
-                                 
+            var chain = _targetManager.GetBuildChain(requestedTargets);
+            foreach(var target in chain)
+            {
+                Run(tracer, new BuildTargetRunContext(target));
+            }
         }
-
-
 
         private void Run(IBuildTracer tracer, BuildTargetRunContext context)
         {

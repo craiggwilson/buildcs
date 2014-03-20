@@ -23,6 +23,8 @@ namespace BuildCs
             var targetRunner = new BuildTargetRunner(targetManager);
 
             _build = new Build(commandLine, targetManager, targetRunner);
+
+            session.ImportNamespace("BuildCs");
         }
 
         public void Terminate()

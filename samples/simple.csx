@@ -1,9 +1,6 @@
-
 var build = Require<Build>();
 
 var config = build.GetParameterOrDefault("config", "Release");
-
-
 
 build.Target("Clean")
 	.Do(() => 
@@ -18,5 +15,4 @@ build.Target("Build")
 		build.Trace("Building the solution in '{0}' mode.", config);
 	});
 
-
-build.RunTargetOrDefault("Clean");
+build.RunTargetOrDefault("Build");
