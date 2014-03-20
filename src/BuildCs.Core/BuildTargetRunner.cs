@@ -30,17 +30,20 @@ namespace BuildCs
         {
             tracer.Trace("Running Target '{0}'", context.Target.Name);
 
-            var stopwatch = Stopwatch.StartNew();
-            try
+            using (tracer.Prefix("{0}: ".F(context.Target.Name)))
             {
-                context.Target.Action();
-                stopwatch.Stop();
-                context.MarkSuccessful(stopwatch.Elapsed);
-            }
-            catch (Exception ex)
-            {
-                stopwatch.Stop();
-                context.MarkFailed(stopwatch.Elapsed, ex);
+                var stopwatch = Stopwatch.StartNew();
+                try
+                {
+                    context.Target.Action();
+                    stopwatch.Stop();
+                    context.MarkSuccessful(stopwatch.Elapsed);
+                }
+                catch (Exception ex)
+                {
+                    stopwatch.Stop();
+                    context.MarkFailed(stopwatch.Elapsed, ex);
+                }
             }
         }
     }
