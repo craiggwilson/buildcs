@@ -14,29 +14,33 @@ namespace BuildCs.Services.Processes
 
         public BuildProcessRunner(BuildTracer tracer, BuildEnvironment environment)
         {
+            _environment = environment;
+            _tracer = tracer;
             TraceProcesses = true;
         }
 
         public bool TraceProcesses { get; set; }
 
-        public int Run(Action<ProcessStartInfo> config)
+        public int Run(Action<ProcessArgs> config)
         {
-            return Run(config, null);
-        }
-
-        public int Run(Action<ProcessStartInfo> config, ProcessArgs args)
-        {
-            args = args ?? new ProcessArgs();
             var process = new Process();
             process.StartInfo.UseShellExecute = false;
-            config(process.StartInfo);
+            var args = new ProcessArgs(process.StartInfo);
+            config(args);
 
-            if (args.CatchMessages)
+            if (args.TraceOutput)
             {
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.RedirectStandardOutput = true;
-                process.OutputDataReceived += (o, e) => args.OutputMessage(e.Data);
-                process.ErrorDataReceived += (o, e) => args.ErrorMessage(e.Data);
+                if (args.OnOutputMessage != null)
+                    process.OutputDataReceived += (_, e) => args.OnOutputMessage(e.Data);
+                else
+                    process.OutputDataReceived += (_, e) => _tracer.Info(e.Data);
+
+                if (args.OnErrorMessage != null)
+                    process.ErrorDataReceived += (_, e) => args.OnErrorMessage(e.Data);
+                else
+                    process.ErrorDataReceived += (_, e) => _tracer.Error(e.Data);
             }
 
             AdaptToMonoIfNecessary(process.StartInfo);
@@ -47,6 +51,8 @@ namespace BuildCs.Services.Processes
             try
             {
                 process.Start();
+                process.BeginErrorReadLine();
+                process.BeginOutputReadLine();
             }
             catch (Exception ex)
             {

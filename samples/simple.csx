@@ -13,6 +13,7 @@ build.Target("Build")
 	.Do(() =>
 	{
 		build.Log("Building the solution in '{0}' mode.", config);
+		build.Exec("git", "status");
 	});
 
 build.RunTargetOrDefault("Build");

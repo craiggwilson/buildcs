@@ -4,8 +4,6 @@ namespace BuildCs.Services.Tracing
 {
     public class ConsoleBuildTracerListener : IBuildTraceListener
     {
-        private ConsoleColor _currentColor;
-
         public void Write(BuildMessage message)
         {
             var color = ConsoleColor.White;
@@ -22,10 +20,11 @@ namespace BuildCs.Services.Tracing
                     break;
             }
 
-            if (_currentColor != color)
-                Console.ForegroundColor = _currentColor = color;
 
+            var old = Console.ForegroundColor;
+            Console.ForegroundColor = color;
             Console.WriteLine(message.Message);
+            Console.ForegroundColor = old;
         }
     }
 }

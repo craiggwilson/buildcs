@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace BuildCs.Services.Processes
 {
     public class ProcessArgs
     {
-        public ProcessArgs()
+        public ProcessArgs(ProcessStartInfo startInfo)
         {
+            TraceOutput = true;
+            StartInfo = startInfo;
             Timeout = System.Threading.Timeout.InfiniteTimeSpan;
         }
 
-        public bool CatchMessages { get; set; }
+        public bool TraceOutput { get; set; }
 
-        public Action<string> OutputMessage { get; set; }
+        public Action<string> OnErrorMessage { get; set; }
 
-        public Action<string> ErrorMessage { get; set; }
+        public Action<string> OnOutputMessage { get; set; }
+
+        public ProcessStartInfo StartInfo { get; private set; }
 
         public TimeSpan Timeout { get; set; }
     }
