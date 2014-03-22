@@ -1,14 +1,6 @@
 ﻿
 namespace BuildCs.Services.Tracing
 {
-    public enum BuildMessageType
-    {
-        Log,
-        Info,
-        Important,
-        Error
-    }
-
     public class BuildMessage
     {
         private readonly string _message;

@@ -10,9 +10,9 @@ namespace BuildCs
 {
     public static partial class Extensions
     {
-        public static BuildProcessRunner ProcessHelper(this Build build)
+        public static ProcessHelper ProcessHelper(this Build build)
         {
-            return build.GetService<BuildProcessRunner>();
+            return build.GetService<ProcessHelper>();
         }
 
         public static int Exec(this Build build, string filename, string arguments)
@@ -27,6 +27,8 @@ namespace BuildCs
                 config.StartInfo.FileName = filename;
                 config.StartInfo.Arguments = arguments;
                 config.Timeout = timeout;
+                config.OnErrorMessage = m => build.Tracer().Error(m);
+                config.OnOutputMessage = m => build.Tracer().Log(m);
             });
         }
 

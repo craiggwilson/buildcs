@@ -47,9 +47,14 @@ namespace BuildCs.Services.Tracing
             Write(BuildMessageType.Info, message, args);
         }
 
+        public void Success(string message, params object[] args)
+        {
+            Write(BuildMessageType.Success, message, args);
+        }
+
         public void Error(string message, params object[] args)
         {
-            Write(BuildMessageType.Info, message, args);
+            Write(BuildMessageType.Error, message, args);
         }
 
         private void Write(BuildMessageType type, string message, object[] args)

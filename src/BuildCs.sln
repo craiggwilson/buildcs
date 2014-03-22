@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildCs.Core", "BuildCs.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildCs.Core.Tests", "BuildCs.Core.Tests\BuildCs.Core.Tests.csproj", "{FB5C0DF4-8AC1-4348-A762-ED63A34DC026}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B4B3363E-2D10-409F-9794-C8845C25C271}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildCs.Sample", "..\samples\src\BuildCs.Sample\BuildCs.Sample.csproj", "{525444CA-A88A-4CA8-93E0-F9996484F903}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildCs.Sample.Tests", "..\samples\src\BuildCs.Sample.Tests\BuildCs.Sample.Tests.csproj", "{22032783-2EE3-4940-878B-60901396CC74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +27,20 @@ Global
 		{FB5C0DF4-8AC1-4348-A762-ED63A34DC026}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB5C0DF4-8AC1-4348-A762-ED63A34DC026}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB5C0DF4-8AC1-4348-A762-ED63A34DC026}.Release|Any CPU.Build.0 = Release|Any CPU
+		{525444CA-A88A-4CA8-93E0-F9996484F903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{525444CA-A88A-4CA8-93E0-F9996484F903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{525444CA-A88A-4CA8-93E0-F9996484F903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{525444CA-A88A-4CA8-93E0-F9996484F903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22032783-2EE3-4940-878B-60901396CC74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22032783-2EE3-4940-878B-60901396CC74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22032783-2EE3-4940-878B-60901396CC74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22032783-2EE3-4940-878B-60901396CC74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{525444CA-A88A-4CA8-93E0-F9996484F903} = {B4B3363E-2D10-409F-9794-C8845C25C271}
+		{22032783-2EE3-4940-878B-60901396CC74} = {B4B3363E-2D10-409F-9794-C8845C25C271}
 	EndGlobalSection
 EndGlobal

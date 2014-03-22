@@ -39,9 +39,9 @@ namespace BuildCs.Services.Targetting
 
         private void Run(BuildTargetRunContext context)
         {
-            using (_tracer.WithPrefix("{0}: ".F(context.Target.Name)))
+            using (_tracer.WithPrefix("[{0}] ".F(context.Target.Name)))
             {
-                _tracer.Info("Beginning...", context.Target.Name);
+                _tracer.Info("Beginning at {0:HH:mm:ss}", DateTime.Now);
 
                 var stopwatch = Stopwatch.StartNew();
                 try
@@ -55,8 +55,7 @@ namespace BuildCs.Services.Targetting
                 {
                     stopwatch.Stop();
                     context.MarkFailed(stopwatch.Elapsed, ex);
-                    _tracer.Error("Failed...");
-                    _tracer.Error("Exception: {0}", ex);
+                    _tracer.Error("Failed. {0}", ex);
                 }
             }
         }
@@ -64,30 +63,44 @@ namespace BuildCs.Services.Targetting
         private void WriteSummary(IEnumerable<BuildTargetRunContext> chain)
         {
             var maxLength = chain.Max(x => x.Target.Name.Length);
-            _tracer.Info("");
-            _tracer.Info("---------------------------------------------------------------------");
-            _tracer.Info("Build Time Report");
-            _tracer.Info("---------------------------------------------------------------------");
-            _tracer.Info("Target".PadRight(maxLength) + "    Duration");
-            _tracer.Info("------".PadRight(maxLength) + "    --------");
+            var anyFailed = chain.Any(x => x.Status == BuildTargetStatus.Failed);
+            Action<string> trace;
+            if(anyFailed)
+                trace = m => _tracer.Error(m);
+            else
+                trace = m => _tracer.Success(m);
+
+            trace("");
+            trace("---------------------------------------------------------------------");
+            trace("Build Time Report");
+            trace("---------------------------------------------------------------------");
+            trace("Target".PadRight(maxLength) + "    Duration");
+            trace("------".PadRight(maxLength) + "    --------");
             foreach(var context in chain)
             {
                 var text = context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString();
                 switch(context.Status)
                 {
                     case BuildTargetStatus.Failed:
-                        _tracer.Error(text);
+                        _tracer.Error(context.Target.Name.PadRight(maxLength + 4) + "Failed");
                         break;
                     case BuildTargetStatus.NotRun:
+                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Skipped");
+                        break;
                     case BuildTargetStatus.Skipped:
-                        _tracer.Log(text);
+                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Not Run");
                         break;
                     case BuildTargetStatus.Success:
-                        _tracer.Info(text);
+                        _tracer.Success(context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString());
                         break;
                 }
             }
-            _tracer.Info("---------------------------------------------------------------------");
+            trace("------".PadRight(maxLength) + "    --------");
+            var status = anyFailed
+                ? "Failed"
+                : "Ok";
+            trace("Result".PadRight(maxLength + 4) + status);
+            trace("---------------------------------------------------------------------");
         }
     }
 }

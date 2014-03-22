@@ -4,7 +4,7 @@ using BuildCs.Services.Tracing;
 
 namespace BuildCs.Services.Processes
 {
-    public class BuildProcessRunner
+    public class ProcessHelper
     {
         private readonly BuildEnvironment _environment;
         private readonly BuildTracer _tracer;
@@ -12,7 +12,7 @@ namespace BuildCs.Services.Processes
         private string _monoPath;
         private string _monoArgs;
 
-        public BuildProcessRunner(BuildTracer tracer, BuildEnvironment environment)
+        public ProcessHelper(BuildTracer tracer, BuildEnvironment environment)
         {
             _environment = environment;
             _tracer = tracer;
@@ -33,14 +33,17 @@ namespace BuildCs.Services.Processes
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.RedirectStandardOutput = true;
                 if (args.OnOutputMessage != null)
-                    process.OutputDataReceived += (_, e) => args.OnOutputMessage(e.Data);
-                else
-                    process.OutputDataReceived += (_, e) => _tracer.Info(e.Data);
-
+                    process.OutputDataReceived += (_, e) =>
+                    {
+                        if (!string.IsNullOrWhiteSpace(e.Data))
+                            args.OnOutputMessage(e.Data);
+                    };
                 if (args.OnErrorMessage != null)
-                    process.ErrorDataReceived += (_, e) => args.OnErrorMessage(e.Data);
-                else
-                    process.ErrorDataReceived += (_, e) => _tracer.Error(e.Data);
+                    process.ErrorDataReceived += (_, e) =>
+                    {
+                        if(!string.IsNullOrWhiteSpace(e.Data))
+                            args.OnErrorMessage(e.Data);
+                    };
             }
 
             AdaptToMonoIfNecessary(process.StartInfo);
