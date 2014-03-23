@@ -2,9 +2,7 @@
 
 namespace BuildCs.Services.Targetting
 {
-
-
-    public class BuildTargetRunContext : BuildContextBase
+    public class BuildTargetRunContext
     {
         private readonly IBuildTarget _target;
         private TimeSpan _duration;

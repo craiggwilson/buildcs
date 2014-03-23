@@ -62,26 +62,7 @@ namespace BuildCs.Services.Targetting
 
         public void Run()
         {
-            var current = _action;
-            foreach(var wrapper in _wrappers.Reverse<Action<Action>>())
-                current = () => wrapper(current);
-
-            current();
-        }
-    }
-
-    internal class TopologicalBuildTargetComparer : IComparer<BuildTarget>
-    {
-        public int Compare(BuildTarget x, BuildTarget y)
-        {
-            if(x.Dependencies.Contains(y.Name) && y.Dependencies.Contains(x.Name))
-                throw new BuildCsException("Mutual dependencies found between targets '{0}' and '{1}'.".F(x.Name, y.Name));
-            if(x.Dependencies.Contains(y.Name))
-                return -1;
-            if (y.Dependencies.Contains(x.Name))
-                return 1;
-
-            return 0;
+            _wrappers.Aggregate(_action, (prev, next) => () => next(prev))();
         }
     }
 }

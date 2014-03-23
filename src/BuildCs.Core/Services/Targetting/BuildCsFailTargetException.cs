@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace BuildCs.Services.Targetting
 {
-    public class BuildCsSkipTargetException : Exception
+    public class BuildCsFailTargetException : Exception
     {
-        public BuildCsSkipTargetException() 
+        public BuildCsFailTargetException() 
             : base("(No reason provided)")
         { }
-        
-        public BuildCsSkipTargetException(string message) 
-            : base(message ?? "") 
+
+        public BuildCsFailTargetException(string message) 
+            : base(message ?? "")
         { }
     }
 }

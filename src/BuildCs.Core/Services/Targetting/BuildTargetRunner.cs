@@ -51,6 +51,12 @@ namespace BuildCs.Services.Targetting
                     context.MarkSuccessful(stopwatch.Elapsed);
                     _tracer.Info("Completed in {0}", stopwatch.Elapsed);
                 }
+                catch(BuildCsFailTargetException ex)
+                {
+                    stopwatch.Stop();
+                    context.MarkFailed(stopwatch.Elapsed, ex);
+                    _tracer.Fatal("Failed. {0}", ex.Message);
+                }
                 catch(BuildCsSkipTargetException ex)
                 {
                     stopwatch.Stop();

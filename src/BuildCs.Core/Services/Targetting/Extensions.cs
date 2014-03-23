@@ -35,13 +35,56 @@ namespace BuildCs
             return build.TargetManager().AddTarget(name);
         }
 
-        public static IBuildTargetBuilder PreCondition(this IBuildTargetBuilder builder, Func<bool> predicate)
+        public static IBuildTargetBuilder After(this IBuildTargetBuilder builder, Action after)
         {
-            return builder.Wrap(a =>
+            return builder.Wrap(next =>
             {
-                if (!predicate())
-                    throw new BuildCsSkipTargetException();
-                a();
+                next();
+                after();
+            });
+        }
+
+        public static IBuildTargetBuilder Before(this IBuildTargetBuilder builder, Action before)
+        {
+            return builder.Wrap(next =>
+            {
+                before();
+                next();
+            });
+        }
+
+        public static IBuildTargetBuilder Cleanup(this IBuildTargetBuilder builder, Action cleanup)
+        {
+            return builder.Wrap(next =>
+            {
+                try
+                {
+                    next();
+                }
+                finally
+                {
+                    cleanup();
+                }
+            });
+        }
+
+        public static IBuildTargetBuilder FailIf(this IBuildTargetBuilder builder, Func<bool> predicate, string message = null)
+        {
+            return builder.Wrap(next =>
+            {
+                if (predicate())
+                    throw new BuildCsFailTargetException(message);
+                next();
+            });
+        }
+
+        public static IBuildTargetBuilder SkipIf(this IBuildTargetBuilder builder, Func<bool> predicate, string message = null)
+        {
+            return builder.Wrap(next =>
+            {
+                if (predicate())
+                    throw new BuildCsSkipTargetException(message);
+                next();
             });
         }
     }

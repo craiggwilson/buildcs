@@ -48,10 +48,10 @@
     <Compile Include="Services\FileSystem\BuildItem.cs" />
     <Compile Include="Services\FileSystem\Extensions.cs" />
     <Compile Include="Services\Processes\Extensions.cs" />
-    <Compile Include="Services\Targetting\BuildContextBase.cs" />
     <Compile Include="BuildCsException.cs" />
     <Compile Include="Services\BuildCommandLine.cs" />
     <Compile Include="Services\BuildEnvironment.cs" />
+    <Compile Include="Services\Targetting\BuildCsFailTargetException.cs" />
     <Compile Include="Services\Targetting\BuildCsSkipTargetException.cs" />
     <Compile Include="Services\Targetting\BuildTargetStatus.cs" />
     <Compile Include="Services\Tracing\BuildMessage.cs" />

@@ -15,23 +15,21 @@ build.Target("Clean")
 		build.Log("Cleaning the solution.");
 	});
 
-build.Target("GenerateAssemblyInfo")
-	.DependsOn("Clean")
-	.PreCondition(() => false)
+build.Target("GitStatus")
+	.SkipIf(() => true)
 	.Do(() =>
 	{
 		build.Exec("git", "status");
 	});
 
 build.Target("Build")
-	.DependsOn("GenerateAssemblyInfo", "Clean")
+	.DependsOn("GitStatus", "Clean")
+	.Before(() => build.Log("First"))
 	.Do(() =>
 	{
 		build.CreateDirectory(binDir);
 		build.Log("Building the solution in '{0}' mode.", config);
+	})
+	.After(() => build.Log("Fourth."));
 
-		var projects = srcDir.Glob("**/*.csproj");
-		projects.Each(p => build.Log("Building '{0}'.", p));
-	});
-
-build.RunTargetOrDefault("Clean");
+build.RunTargetOrDefault("Build");
