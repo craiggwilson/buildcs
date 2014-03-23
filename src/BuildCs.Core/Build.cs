@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using BuildCs.Services;
+using BuildCs;
 using ScriptCs.Contracts;
 
 namespace BuildCs

@@ -48,8 +48,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Services\FileSystem\BuildItemTests.cs" />
-    <Compile Include="Services\Targetting\BuildTargetManagerTests.cs" />
+    <Compile Include="FileSystem\BuildItemTests.cs" />
+    <Compile Include="Targetting\BuildTargetManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
