@@ -5,10 +5,13 @@ var config = build.GetParameterOrDefault("config", "Release");
 var baseDir = build.CurrentDirectory();
 var srcDir = baseDir + "src";
 var toolsDir = baseDir + "tools";
+var artifactsDir = baseDir + "artifacts";
+var binDir = artifactsDir + "bin";
 
 build.Target("Clean")
 	.Do(() => 
 	{
+		build.DeleteDirectory(artifactsDir);
 		build.Log("Cleaning the solution.");
 	});
 
@@ -24,10 +27,11 @@ build.Target("Build")
 	.DependsOn("GenerateAssemblyInfo", "Clean")
 	.Do(() =>
 	{
+		build.CreateDirectory(binDir);
 		build.Log("Building the solution in '{0}' mode.", config);
 
-		var projects = srcDir.Glob("**\\*.csproj");
+		var projects = srcDir.Glob("**/*.csproj");
 		projects.Each(p => build.Log("Building '{0}'.", p));
 	});
 
-build.RunTargetOrDefault("Build");
+build.RunTargetOrDefault("Clean");
