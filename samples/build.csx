@@ -14,6 +14,7 @@ build.Target("Clean")
 
 build.Target("GenerateAssemblyInfo")
 	.DependsOn("Clean")
+	.PreCondition(() => false)
 	.Do(() =>
 	{
 		build.Exec("git", "status");

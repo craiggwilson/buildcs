@@ -52,6 +52,7 @@
     <Compile Include="BuildCsException.cs" />
     <Compile Include="Services\BuildCommandLine.cs" />
     <Compile Include="Services\BuildEnvironment.cs" />
+    <Compile Include="Services\Targetting\BuildCsSkipTargetException.cs" />
     <Compile Include="Services\Targetting\BuildTargetStatus.cs" />
     <Compile Include="Services\Tracing\BuildMessage.cs" />
     <Compile Include="Services\Processes\ProcessHelper.cs" />

@@ -12,6 +12,7 @@ namespace BuildCs.Services.Tracing
         Info,
         Important,
         Success,
-        Error
+        Error,
+        Fatal
     }
 }

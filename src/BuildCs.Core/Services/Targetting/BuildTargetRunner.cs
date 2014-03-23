@@ -51,11 +51,17 @@ namespace BuildCs.Services.Targetting
                     context.MarkSuccessful(stopwatch.Elapsed);
                     _tracer.Info("Completed in {0}", stopwatch.Elapsed);
                 }
+                catch(BuildCsSkipTargetException ex)
+                {
+                    stopwatch.Stop();
+                    context.MarkSkipped();
+                    _tracer.Info("Skipped. {0}", ex.Message);
+                }
                 catch (Exception ex)
                 {
                     stopwatch.Stop();
                     context.MarkFailed(stopwatch.Elapsed, ex);
-                    _tracer.Error("Failed. {0}", ex);
+                    _tracer.Fatal("Failed. {0}", ex);
                 }
             }
         }
@@ -82,13 +88,13 @@ namespace BuildCs.Services.Targetting
                 switch(context.Status)
                 {
                     case BuildTargetStatus.Failed:
-                        _tracer.Error(context.Target.Name.PadRight(maxLength + 4) + "Failed");
+                        _tracer.Fatal(context.Target.Name.PadRight(maxLength + 4) + "Failed");
                         break;
                     case BuildTargetStatus.NotRun:
-                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Skipped");
+                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Not Run");
                         break;
                     case BuildTargetStatus.Skipped:
-                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Not Run");
+                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Skipped");
                         break;
                     case BuildTargetStatus.Success:
                         _tracer.Success(context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString());

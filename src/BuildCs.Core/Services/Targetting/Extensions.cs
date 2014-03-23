@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BuildCs.Services.Targetting;
 
 namespace BuildCs
@@ -32,6 +33,16 @@ namespace BuildCs
         public static IBuildTargetBuilder Target(this Build build, string name)
         {
             return build.TargetManager().AddTarget(name);
+        }
+
+        public static IBuildTargetBuilder PreCondition(this IBuildTargetBuilder builder, Func<bool> predicate)
+        {
+            return builder.Wrap(a =>
+            {
+                if (!predicate())
+                    throw new BuildCsSkipTargetException();
+                a();
+            });
         }
     }
 }

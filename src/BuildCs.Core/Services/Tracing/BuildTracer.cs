@@ -57,6 +57,11 @@ namespace BuildCs.Services.Tracing
             Write(BuildMessageType.Error, message, args);
         }
 
+        public void Fatal(string message, params object[] args)
+        {
+            Write(BuildMessageType.Fatal, message, args);
+        }
+
         private void Write(BuildMessageType type, string message, object[] args)
         {
             _listeners.Each(x => x.Write(new BuildMessage(type, string.Format(_currentPrefix + message, args))));
