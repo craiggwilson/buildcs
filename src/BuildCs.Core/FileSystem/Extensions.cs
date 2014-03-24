@@ -5,34 +5,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BuildCs.FileSystem;
-using D = System.IO.Directory;
-using F = System.IO.File;
 
 namespace BuildCs
 {
     public static partial class Extensions
     {
+        public static FileSystemHelper FileSystemHelper(this Build build)
+        {
+            return build.GetService<FileSystemHelper>();
+        }
+
         public static void CreateDirectory(this Build build, string path)
         {
-            if (!D.Exists(path))
-                D.CreateDirectory(path);
+            FileSystemHelper(build).CreateDirectory(path);
         }
 
         public static BuildItem CurrentDirectory(this Build build)
         {
-            return D.GetCurrentDirectory();
+            return FileSystemHelper(build).CurrentDirectory();
         }
 
         public static void DeleteDirectory(this Build build, string path)
         {
-            if (D.Exists(path))
-                D.Delete(path, true);
+            FileSystemHelper(build).DeleteDirectory(path);
         }
 
         public static void DeleteFile(this Build build, string path)
         {
-            if(F.Exists(path))
-                F.Delete(path);
+            FileSystemHelper(build).DeleteFile(path);
         }
 
         public static BuildItem Directory(this Build build, string path)
@@ -40,9 +40,19 @@ namespace BuildCs
             return path;
         }
 
+        public static bool DirectoryExists(this Build build, string path)
+        {
+            return FileSystemHelper(build).DirectoryExists(path);
+        }
+
         public static BuildItem File(this Build build, string path)
         {
             return path;
+        }
+
+        public static bool FileExists(this Build build, string path)
+        {
+            return FileSystemHelper(build).FileExists(path);
         }
 
         public static BuildGlob Glob(this Build build, string pattern)

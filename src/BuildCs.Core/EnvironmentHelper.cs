@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using BuildCs.FileSystem;
 
 namespace BuildCs
 {
-    public class BuildEnvironment
+    public class EnvironmentHelper
     {
         public bool IsMono
         {

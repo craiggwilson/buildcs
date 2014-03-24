@@ -9,6 +9,11 @@ namespace BuildCs.FileSystem
 {
     public sealed class BuildItem : IEquatable<BuildItem>
     {
+        public static string ExpandPath(string path)
+        {
+            return Environment.ExpandEnvironmentVariables(path);
+        }
+
         public static string NormalizePath(string path)
         {
             return path.Replace('\\', Path.DirectorySeparatorChar)
@@ -22,7 +27,7 @@ namespace BuildCs.FileSystem
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentException("Cannot be null or purely whitespace.", "path");
 
-            _path = NormalizePath(path);
+            _path = ExpandPath(NormalizePath(path));
         }
 
         public override bool Equals(object obj)

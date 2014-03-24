@@ -6,13 +6,13 @@ namespace BuildCs.Processes
 {
     public class ProcessHelper
     {
-        private readonly BuildEnvironment _environment;
+        private readonly EnvironmentHelper _environment;
         private readonly BuildTracer _tracer;
 
         private string _monoPath;
         private string _monoArgs;
 
-        public ProcessHelper(BuildTracer tracer, BuildEnvironment environment)
+        public ProcessHelper(BuildTracer tracer, EnvironmentHelper environment)
         {
             _environment = environment;
             _tracer = tracer;
@@ -21,28 +21,28 @@ namespace BuildCs.Processes
 
         public bool TraceProcesses { get; set; }
 
-        public int Run(Action<ProcessArgs> config)
+        public int Exec(Action<ProcessConfig> config)
         {
             var process = new Process();
             process.StartInfo.UseShellExecute = false;
-            var args = new ProcessArgs(process.StartInfo);
-            config(args);
+            var processConfig = new ProcessConfig(process.StartInfo);
+            config(processConfig);
 
-            if (args.TraceOutput)
+            if (processConfig.TraceOutput)
             {
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.RedirectStandardOutput = true;
-                if (args.OnOutputMessage != null)
+                if (processConfig.OnOutputMessage != null)
                     process.OutputDataReceived += (_, e) =>
                     {
                         if (!string.IsNullOrWhiteSpace(e.Data))
-                            args.OnOutputMessage(e.Data);
+                            processConfig.OnOutputMessage(e.Data);
                     };
-                if (args.OnErrorMessage != null)
+                if (processConfig.OnErrorMessage != null)
                     process.ErrorDataReceived += (_, e) =>
                     {
                         if(!string.IsNullOrWhiteSpace(e.Data))
-                            args.OnErrorMessage(e.Data);
+                            processConfig.OnErrorMessage(e.Data);
                     };
             }
 
@@ -62,7 +62,7 @@ namespace BuildCs.Processes
                 _tracer.Error("Start of process '{0} {1}' failed. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, ex);
             }
 
-            if(!process.WaitForExit(args.Timeout.Milliseconds))
+            if(!process.WaitForExit(processConfig.Timeout.Milliseconds))
             {
                 try
                 {
@@ -70,10 +70,10 @@ namespace BuildCs.Processes
                 }
                 catch(Exception ex)
                 {
-                    _tracer.Error("Could not kill process '{0} {1}' after '{1}' milliseconds. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, args.Timeout.Milliseconds, ex);
+                    _tracer.Error("Could not kill process '{0} {1}' after '{1}' milliseconds. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, processConfig.Timeout.Milliseconds, ex);
                 }
 
-                _tracer.Error("Process '{0} {1}' timed out.", process.StartInfo.FileName, process.StartInfo.Arguments);
+                throw new BuildCsException("Process '{0} {1}' timed out.".F(process.StartInfo.FileName, process.StartInfo.Arguments));
             }
 
             return process.ExitCode;

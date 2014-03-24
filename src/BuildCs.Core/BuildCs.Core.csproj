@@ -47,17 +47,22 @@
     <Compile Include="FileSystem\BuildGlob.cs" />
     <Compile Include="FileSystem\BuildItem.cs" />
     <Compile Include="FileSystem\Extensions.cs" />
+    <Compile Include="FileSystem\FileSystemHelper.cs" />
+    <Compile Include="MsBuild\Extensions.cs" />
+    <Compile Include="MsBuild\MsBuildConfig.cs" />
+    <Compile Include="MsBuild\MsBuildHelper.cs" />
+    <Compile Include="MsBuild\MsBuildVerbosity.cs" />
     <Compile Include="Processes\Extensions.cs" />
     <Compile Include="BuildCsException.cs" />
     <Compile Include="BuildCommandLine.cs" />
-    <Compile Include="BuildEnvironment.cs" />
+    <Compile Include="EnvironmentHelper.cs" />
     <Compile Include="Targetting\BuildCsFailTargetException.cs" />
     <Compile Include="Targetting\BuildCsSkipTargetException.cs" />
     <Compile Include="Targetting\BuildTargetStatus.cs" />
     <Compile Include="Tracing\BuildMessage.cs" />
     <Compile Include="Processes\ProcessHelper.cs" />
     <Compile Include="BuildScriptPack.cs" />
-    <Compile Include="Processes\ProcessArgs.cs" />
+    <Compile Include="Processes\ProcessConfig.cs" />
     <Compile Include="Targetting\BuildTarget.cs" />
     <Compile Include="Targetting\BuildTargetManager.cs" />
     <Compile Include="Targetting\BuildTargetRunContext.cs" />
@@ -78,9 +83,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MsBuild\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

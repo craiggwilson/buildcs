@@ -37,7 +37,7 @@ namespace BuildCs.FileSystem
                     else
                         return acc.SelectMany(dir => CheckSubDirectories(dir, p, false)).ToList();
                 })
-                .Select(f => new BuildItem(f))
+                .Select(f => new BuildItem(f.TrimEnd('\\', '/')))
                 .ToList();
         }
 

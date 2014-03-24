@@ -64,7 +64,9 @@ namespace BuildCs.Tracing
 
         private void Write(BuildMessageType type, string message, object[] args)
         {
-            _listeners.Each(x => x.Write(new BuildMessage(type, string.Format(_currentPrefix + message, args))));
+            if (args != null && args.Length > 0)
+                message = string.Format(message, args);
+            _listeners.Each(x => x.Write(new BuildMessage(type, _currentPrefix + message)));
         }
 
         private class Prefixer : IDisposable

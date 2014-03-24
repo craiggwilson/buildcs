@@ -1,3 +1,5 @@
+using BuildCs.MsBuild;
+
 var build = Require<Build>();
 
 var config = build.GetParameterOrDefault("config", "Release");
@@ -9,27 +11,18 @@ var artifactsDir = baseDir + "artifacts";
 var binDir = artifactsDir + "bin";
 
 build.Target("Clean")
-	.Do(() => 
-	{
-		build.DeleteDirectory(artifactsDir);
-		build.Log("Cleaning the solution.");
-	});
-
-build.Target("GitStatus")
-	.SkipIf(() => true)
-	.Do(() =>
-	{
-		build.Exec("git", "status");
-	});
+	.Do(() => build.DeleteDirectory(artifactsDir));
 
 build.Target("Build")
-	.DependsOn("GitStatus", "Clean")
-	.Before(() => build.Log("First"))
+	.DependsOn("Clean")
 	.Do(() =>
 	{
 		build.CreateDirectory(binDir);
-		build.Log("Building the solution in '{0}' mode.", config);
-	})
-	.After(() => build.Log("Fourth."));
+		build.MsBuild(srcDir.Glob("**/*.csproj"), c => 
+		{
+			c.AddProperty("OutputPath", binDir);
+			c.AddTarget("Build");
+		});
+	});
 
 build.RunTargetOrDefault("Build");
