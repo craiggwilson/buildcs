@@ -52,6 +52,9 @@
     <Compile Include="MsBuild\MsBuildConfig.cs" />
     <Compile Include="MsBuild\MsBuildHelper.cs" />
     <Compile Include="MsBuild\MsBuildVerbosity.cs" />
+    <Compile Include="Nuget\Extensions.cs" />
+    <Compile Include="Nuget\NugetHelper.cs" />
+    <Compile Include="Nuget\RestorePackageConfig.cs" />
     <Compile Include="Processes\Extensions.cs" />
     <Compile Include="BuildCsException.cs" />
     <Compile Include="BuildCommandLine.cs" />

@@ -71,7 +71,7 @@ namespace BuildCs.FileSystem
         public static bool operator ==(BuildItem lhs, BuildItem rhs)
         {
             if (Object.ReferenceEquals(lhs, null))
-                return false;
+                return Object.ReferenceEquals(rhs, null);
 
             return lhs.Equals(rhs);
         }
@@ -79,7 +79,7 @@ namespace BuildCs.FileSystem
         public static bool operator !=(BuildItem lhs, BuildItem rhs)
         {
             if (Object.ReferenceEquals(lhs, null))
-                return false;
+                return !Object.ReferenceEquals(rhs, null);
 
             return !lhs.Equals(rhs);
         }

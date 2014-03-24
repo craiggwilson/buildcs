@@ -58,13 +58,7 @@ namespace BuildCs.MsBuild
             });
 
             if (exitCode != 0)
-            {
-                if (Debugger.IsAttached)
-                    Debugger.Break();
-
-                // perhaps do something more with msbuild loggers...
                 throw new BuildCsException("MsBuild failed with exit code '{0}'.".F(exitCode));
-            }
         }
 
         private string GetArguments(MsBuildConfig config)

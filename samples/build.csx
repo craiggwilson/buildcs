@@ -1,4 +1,5 @@
 using BuildCs.MsBuild;
+using BuildCs.Nuget;
 
 var build = Require<Build>();
 
@@ -18,10 +19,12 @@ build.Target("Build")
 	.Do(() =>
 	{
 		build.CreateDirectory(binDir);
+		build.NugetRestorePackages();
 		build.MsBuild(srcDir.Glob("**/*.csproj"), c => 
 		{
 			c.AddProperty("OutputPath", binDir);
 			c.AddTarget("Build");
+			c.Verbosity = MsBuildVerbosity.Quiet;
 		});
 	});
 

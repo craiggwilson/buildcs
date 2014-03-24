@@ -68,7 +68,25 @@ namespace BuildCs.FileSystem
         }
 
         [Fact]
-        public void Should_test_as_equals_when_items_are_equal()
+        public void Should_test_as_equal_when_left_and_right_side_are_null()
+        {
+            BuildItem item1 = null;
+            (item1 == null).ShouldBe(true);
+            (item1 != null).ShouldBe(false);
+        }
+
+        [Fact]
+        public void Should_test_as_not_equal_when_right_side_is_null()
+        {
+            var item1 = new BuildItem("\\test");
+
+            item1.Equals(null).ShouldBe(false);
+            (item1 == null).ShouldBe(false);
+            (item1 != null).ShouldBe(true);
+        }
+
+        [Fact]
+        public void Should_test_as_equal_when_items_are_equal()
         {
             var item1 = new BuildItem("\\test");
             var item2 = new BuildItem("\\test");
