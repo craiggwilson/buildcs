@@ -5,23 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using BuildCs.FileSystem;
 
-namespace BuildCs.Xunit
+namespace BuildCs.XUnit
 {
     public static class Extensions
     {
-        public static XunitHelper XunitHelper(this Build build)
+        public static XUnitHelper XUnitHelper(this Build build)
         {
-            return build.GetService<XunitHelper>();
+            return build.GetService<XUnitHelper>();
         }
 
-        public static void Xunit(this Build build, BuildItem assembly, Action<XunitArgs> config = null)
+        public static void XUnit(this Build build, BuildItem assembly, Action<XUnitArgs> config = null)
         {
-            Xunit(build, new[] { assembly }, config);
+            XUnit(build, new[] { assembly }, config);
         }
 
-        public static void Xunit(this Build build, IEnumerable<BuildItem> assemblies, Action<XunitArgs> config = null)
+        public static void XUnit(this Build build, IEnumerable<BuildItem> assemblies, Action<XUnitArgs> config = null)
         {
-            XunitHelper(build).Test(assemblies, config);
+            XUnitHelper(build).Test(assemblies, config);
         }
     }
 }

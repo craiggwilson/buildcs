@@ -5,20 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using BuildCs.FileSystem;
 
-namespace BuildCs.Xunit
+namespace BuildCs.XUnit
 {
-    public class XunitArgs
+    public class XUnitArgs
     {
         private readonly List<string> _includedTraits;
         private readonly List<string> _excludedTraits;
 
-        public XunitArgs()
+        public XUnitArgs()
         {
             _includedTraits = new List<string>();
             _excludedTraits = new List<string>();
         }
-
-        public XunitErrorLevel? ErrorLevel { get; set; }
 
         public IReadOnlyList<string> ExcludedTraits
         {

@@ -7,24 +7,24 @@ using BuildCs.FileSystem;
 using BuildCs.Processes;
 using BuildCs.Tracing;
 
-namespace BuildCs.Xunit
+namespace BuildCs.XUnit
 {
-    public class XunitHelper
+    public class XUnitHelper
     {
         private readonly FileSystemHelper _fileSystem;
         private readonly ProcessHelper _process;
         private readonly BuildTracer _tracer;
 
-        public XunitHelper(BuildTracer tracer, FileSystemHelper fileSystem, ProcessHelper process)
+        public XUnitHelper(BuildTracer tracer, FileSystemHelper fileSystem, ProcessHelper process)
         {
             _fileSystem = fileSystem;
             _process = process;
             _tracer = tracer;
         }
 
-        public void Test(IEnumerable<BuildItem> assemblies, Action<XunitArgs> config)
+        public void Test(IEnumerable<BuildItem> assemblies, Action<XUnitArgs> config)
         {
-            var args = new XunitArgs();
+            var args = new XUnitArgs();
             if (config != null)
                 config(args);
 
@@ -37,10 +37,10 @@ namespace BuildCs.Xunit
             });
 
             if (exitCode != 0)
-                throw new BuildCsException("Xunit failed with exit code '{0}'.".F(exitCode));
+                throw new BuildCsException("XUnit failed with exit code '{0}'.".F(exitCode));
         }
 
-        private string GetArguments(XunitArgs args)
+        private string GetArguments(XUnitArgs args)
         {
             var list = new List<string>();
 
