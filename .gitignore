@@ -10,6 +10,8 @@
 # Build results
 [Dd]ebug/
 [Rr]elease/
+artifacts
 
 # NuGet Packages Directory
 packages
+

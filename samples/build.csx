@@ -1,5 +1,6 @@
 using BuildCs.MsBuild;
 using BuildCs.Nuget;
+using BuildCs.Xunit;
 
 var build = Require<Build>();
 
@@ -31,6 +32,17 @@ build.Target("Build")
 		});
 	});
 
+build.Target("Xunit")
+	.DependsOn("Build")
+	.Do(() =>
+	{
+		build.Xunit(binDir.Glob("**/*Tests.dll"), args =>
+		{
+			args.ToolPath = baseDir + "../tools/xunit/xunit.console.clr4.exe";
+			args.XmlOutput = artifactsDir + "test-results.xml";
+		});
+	});
+
 build.Target("NugetPack")
 	.DependsOn("Build")
 	.Do(() =>
@@ -44,4 +56,4 @@ build.Target("NugetPack")
 		});
 	});
 
-build.RunTargetOrDefault("NugetPack");
+build.RunTargetOrDefault("Xunit");
