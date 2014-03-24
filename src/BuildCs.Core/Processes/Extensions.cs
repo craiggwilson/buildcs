@@ -32,7 +32,7 @@ namespace BuildCs
             });
         }
 
-        public static int Exec(this Build build, Action<ProcessConfig> config)
+        public static int Exec(this Build build, Action<ProcessArgs> config)
         {
             return ProcessHelper(build).Exec(config);
         }

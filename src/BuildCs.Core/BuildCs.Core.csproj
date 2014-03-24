@@ -49,12 +49,15 @@
     <Compile Include="FileSystem\Extensions.cs" />
     <Compile Include="FileSystem\FileSystemHelper.cs" />
     <Compile Include="MsBuild\Extensions.cs" />
-    <Compile Include="MsBuild\MsBuildConfig.cs" />
+    <Compile Include="MsBuild\MsBuildArgs.cs" />
     <Compile Include="MsBuild\MsBuildHelper.cs" />
     <Compile Include="MsBuild\MsBuildVerbosity.cs" />
     <Compile Include="Nuget\Extensions.cs" />
+    <Compile Include="Nuget\NugetArgsBase.cs" />
     <Compile Include="Nuget\NugetHelper.cs" />
-    <Compile Include="Nuget\RestorePackageConfig.cs" />
+    <Compile Include="Nuget\NugetVerbosity.cs" />
+    <Compile Include="Nuget\PackArgs.cs" />
+    <Compile Include="Nuget\RestorePackageArgs.cs" />
     <Compile Include="Processes\Extensions.cs" />
     <Compile Include="BuildCsException.cs" />
     <Compile Include="BuildCommandLine.cs" />
@@ -65,7 +68,7 @@
     <Compile Include="Tracing\BuildMessage.cs" />
     <Compile Include="Processes\ProcessHelper.cs" />
     <Compile Include="BuildScriptPack.cs" />
-    <Compile Include="Processes\ProcessConfig.cs" />
+    <Compile Include="Processes\ProcessArgs.cs" />
     <Compile Include="Targetting\BuildTarget.cs" />
     <Compile Include="Targetting\BuildTargetManager.cs" />
     <Compile Include="Targetting\BuildTargetRunContext.cs" />

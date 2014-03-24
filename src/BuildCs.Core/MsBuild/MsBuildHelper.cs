@@ -35,24 +35,24 @@ namespace BuildCs.MsBuild
 
         public IList<BuildItem> MsBuildSearchPaths { get; set; }
 
-        public void Exec(IEnumerable<BuildItem> projects, Action<MsBuildConfig> config)
+        public void Exec(IEnumerable<BuildItem> projects, Action<MsBuildArgs> config)
         {
             if (projects == null)
                 throw new ArgumentNullException("projects");
 
-            var msBuildConfig = new MsBuildConfig();
+            var args = new MsBuildArgs();
             if(config != null)
-                config(msBuildConfig);
+                config(args);
 
-            projects.Each(p => BuildProject(p, msBuildConfig));
+            projects.Each(p => BuildProject(p, args));
         }
 
-        private void BuildProject(BuildItem project, MsBuildConfig config)
+        private void BuildProject(BuildItem project, MsBuildArgs args)
         {
             var exitCode = _processHelper.Exec(p =>
             {
                 p.StartInfo.FileName = GetExecutable();
-                p.StartInfo.Arguments = GetArguments(config) + " \"{0}\"".F(project);
+                p.StartInfo.Arguments = GetArguments(args) + " \"{0}\"".F(project);
                 p.OnErrorMessage = m => _tracer.Error(m);
                 p.OnOutputMessage = m => _tracer.Log(m);
             });
@@ -61,7 +61,7 @@ namespace BuildCs.MsBuild
                 throw new BuildCsException("MsBuild failed with exit code '{0}'.".F(exitCode));
         }
 
-        private string GetArguments(MsBuildConfig config)
+        private string GetArguments(MsBuildArgs config)
         {
             var list = new List<string>();
 

@@ -14,12 +14,12 @@ namespace BuildCs.MsBuild
             return build.GetService<MsBuildHelper>();
         }
 
-        public static void MsBuild(this Build build, BuildItem project, Action<MsBuildConfig> config = null)
+        public static void MsBuild(this Build build, BuildItem project, Action<MsBuildArgs> config = null)
         {
             MsBuild(build, new[] { project }, config);
         }
 
-        public static void MsBuild(this Build build, IEnumerable<BuildItem> projects, Action<MsBuildConfig> config = null)
+        public static void MsBuild(this Build build, IEnumerable<BuildItem> projects, Action<MsBuildArgs> config = null)
         {
             MsBuildHelper(build).Exec(projects, config);
         }

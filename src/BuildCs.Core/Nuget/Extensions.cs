@@ -14,6 +14,11 @@ namespace BuildCs.Nuget
             return build.GetService<NugetHelper>();
         }
 
+        public static void NugetPack(this Build build, BuildItem nuspecFile, Action<PackArgs> config)
+        {
+            NugetHelper(build).Pack(nuspecFile, config);
+        }
+
         public static void NugetRestorePackages(this Build build)
         {
             NugetHelper(build).RestorePackages();

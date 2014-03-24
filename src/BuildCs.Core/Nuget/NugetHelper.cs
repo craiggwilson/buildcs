@@ -23,32 +23,44 @@ namespace BuildCs.Nuget
             _tracer = tracer;
         }
 
-        public BuildItem DefaultOutputPath { get; set; }
-
         public void RestorePackages()
         {
             var packageConfigs = new BuildGlob().Include("**/*.sln");
             packageConfigs.Each(pc => RestorePackage(pc, null));
         }
 
-        public void RestorePackage(BuildItem file, Action<RestorePackageConfig> config)
+        public void Pack(BuildItem nuspecFile, Action<PackArgs> config)
         {
-            var rpConfig = new RestorePackageConfig();
+            var args = new PackArgs();
             if (config != null)
-                config(rpConfig);
+                config(args);
 
-            if (rpConfig.OutputPath == null)
-                rpConfig.OutputPath = DefaultOutputPath;
+            ExecNuget(
+                GetExecutable(args.ToolPath),
+                "pack \"{0}\" ".F(nuspecFile) + GetArguments(args),
+                args.Timeout);
+        }
 
-            var exe = GetExecutable(rpConfig.ToolPath);
-            var args = "restore \"{0}\" ".F(file) + GetArguments(rpConfig);
+        public void RestorePackage(BuildItem file, Action<RestorePackageArgs> config)
+        {
+            var args = new RestorePackageArgs();
+            if (config != null)
+                config(args);
 
+            ExecNuget(
+                GetExecutable(args.ToolPath), 
+                "restore \"{0}\" ".F(file) + GetArguments(args),
+                args.Timeout);
+        }
+
+        private void ExecNuget(string exe, string args, TimeSpan? timeout)
+        {
             var exitCode = _processHelper.Exec(p =>
             {
                 p.StartInfo.FileName = exe;
                 p.StartInfo.Arguments = args;
-                if (rpConfig.Timeout.HasValue)
-                    p.Timeout = rpConfig.Timeout.Value;
+                if (timeout.HasValue)
+                    p.Timeout = timeout.Value;
                 p.OnErrorMessage = m => _tracer.Error(m);
                 p.OnOutputMessage = m => _tracer.Log(m);
             });
@@ -57,17 +69,55 @@ namespace BuildCs.Nuget
                 throw new BuildCsException("Nuget failed with exit code '{0}'.".F(exitCode));
         }
 
-        private string GetArguments(RestorePackageConfig config)
+        private string GetArguments(PackArgs args)
         {
-            var list = new List<string>();
+            var list = GetBaseArguments(args);
 
-            if (config.OutputPath != null)
-                list.Add("-OutputDirectory \"{0}\"".F(config.OutputPath));
+            if (args.NonInteractive)
+                list.Add("-NonInteractive");
 
-            if (config.Sources != null)
-                config.Sources.Each(s => list.Add("-Source \"{0}\"".F(s)));
+            if (args.BasePath != null)
+                list.Add("-BasePath \"{0}\"".F(args.BasePath));
+
+            if (args.OutputDirectory != null)
+                list.Add("-OutputDirectory \"{0}\"".F(args.OutputDirectory));
+
+            if (args.Symbols.HasValue && args.Symbols.Value)
+                list.Add("-Symbols");
+
+            if (args.Version != null)
+                list.Add("-Version " + args.Version);
+
+            if(args.Properties.Count > 0)
+            {
+                list.Add("-Properties");
+                foreach (var property in args.Properties)
+                    list.Add("{0}=\"{1}\"".F(property.Key, property.Value));
+            }
 
             return string.Join(" ", list);
+        }
+
+        private string GetArguments(RestorePackageArgs args)
+        {
+            var list = GetBaseArguments(args);
+
+            if (args.OutputDirectory != null)
+                list.Add("-OutputDirectory \"{0}\"".F(args.OutputDirectory));
+
+            if (args.Sources != null)
+                args.Sources.Each(s => list.Add("-Source \"{0}\"".F(s)));
+
+            return string.Join(" ", list);
+        }
+
+        private List<string> GetBaseArguments(NugetArgsBase args)
+        {
+            var list = new List<string>();
+            if (args.Verbosity.HasValue)
+                list.Add("-Verbosity " + args.Verbosity.ToString().ToLowerInvariant());
+
+            return list;
         }
 
         private string GetExecutable(BuildItem toolPath)

@@ -7,12 +7,12 @@ using BuildCs.FileSystem;
 
 namespace BuildCs.MsBuild
 {
-    public class MsBuildConfig
+    public class MsBuildArgs
     {
         private readonly Dictionary<string, string> _properties;
         private readonly List<string> _targets;
 
-        public MsBuildConfig()
+        public MsBuildArgs()
         {
             _properties = new Dictionary<string, string>();
             _targets = new List<string>();

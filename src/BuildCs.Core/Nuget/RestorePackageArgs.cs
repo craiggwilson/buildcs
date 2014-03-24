@@ -7,25 +7,21 @@ using BuildCs.FileSystem;
 
 namespace BuildCs.Nuget
 {
-    public class RestorePackageConfig
+    public class RestorePackageArgs : NugetArgsBase
     {
         private readonly List<string> _sources;
 
-        public RestorePackageConfig()
+        public RestorePackageArgs()
         {
             _sources = new List<string>();
         }
 
-        public BuildItem OutputPath { get; set; }
+        public BuildItem OutputDirectory { get; set; }
 
         public IReadOnlyList<string> Sources
         {
             get { return _sources; }
         }
-
-        public TimeSpan? Timeout { get; set; }
-
-        public BuildItem ToolPath { get; set; }
 
         public void AddSource(string source)
         {

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>buildcs-sample</id>
+    <version>0.0.0</version>
+    <title>BuildCs Sample</title>
+    <authors>Craig Wilson</authors>
+    <owners>Craig Wilson</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Sample Nuspec file for BuildCs</description>
+    <projectUrl>https://github.com/craiggwilson/buildcs/tree/master/samples</projectUrl>
+    <tags>scriptcs buildcs sample</tags>
+    <language>en-US</language>
+  </metadata>
+  <files>
+    <file src="artifacts\bin\BuildCs.Sample.dll" target="lib\net45" />
+    <file src="src\BuildCs.Sample\**\*.cs" target="src\BuildCs.Sample" />
+  </files>
+</package>

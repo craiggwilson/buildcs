@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace BuildCs.Processes
 {
-    public class ProcessConfig
+    public class ProcessArgs
     {
-        public ProcessConfig(ProcessStartInfo startInfo)
+        public ProcessArgs(ProcessStartInfo startInfo)
         {
             TraceOutput = true;
             StartInfo = startInfo;

@@ -21,28 +21,28 @@ namespace BuildCs.Processes
 
         public bool TraceProcesses { get; set; }
 
-        public int Exec(Action<ProcessConfig> config)
+        public int Exec(Action<ProcessArgs> config)
         {
             var process = new Process();
             process.StartInfo.UseShellExecute = false;
-            var processConfig = new ProcessConfig(process.StartInfo);
-            config(processConfig);
+            var args = new ProcessArgs(process.StartInfo);
+            config(args);
 
-            if (processConfig.TraceOutput)
+            if (args.TraceOutput)
             {
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.RedirectStandardOutput = true;
-                if (processConfig.OnOutputMessage != null)
+                if (args.OnOutputMessage != null)
                     process.OutputDataReceived += (_, e) =>
                     {
                         if (!string.IsNullOrWhiteSpace(e.Data))
-                            processConfig.OnOutputMessage(e.Data);
+                            args.OnOutputMessage(e.Data);
                     };
-                if (processConfig.OnErrorMessage != null)
+                if (args.OnErrorMessage != null)
                     process.ErrorDataReceived += (_, e) =>
                     {
                         if(!string.IsNullOrWhiteSpace(e.Data))
-                            processConfig.OnErrorMessage(e.Data);
+                            args.OnErrorMessage(e.Data);
                     };
             }
 
@@ -62,7 +62,7 @@ namespace BuildCs.Processes
                 _tracer.Error("Start of process '{0} {1}' failed. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, ex);
             }
 
-            if(!process.WaitForExit(processConfig.Timeout.Milliseconds))
+            if(!process.WaitForExit(args.Timeout.Milliseconds))
             {
                 try
                 {
@@ -70,7 +70,7 @@ namespace BuildCs.Processes
                 }
                 catch(Exception ex)
                 {
-                    _tracer.Error("Could not kill process '{0} {1}' after '{1}' milliseconds. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, processConfig.Timeout.Milliseconds, ex);
+                    _tracer.Error("Could not kill process '{0} {1}' after '{1}' milliseconds. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, args.Timeout.Milliseconds, ex);
                 }
 
                 throw new BuildCsException("Process '{0} {1}' timed out.".F(process.StartInfo.FileName, process.StartInfo.Arguments));
