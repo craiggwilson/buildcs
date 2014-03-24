@@ -19,6 +19,11 @@ namespace BuildCs.Nuget
             NugetHelper(build).Pack(nuspecFile, config);
         }
 
+        public static void NugetPush(this Build build, BuildItem nupkgFile, Action<PushArgs> config)
+        {
+            NugetHelper(build).Push(nupkgFile, config);
+        }
+
         public static void NugetRestorePackages(this Build build)
         {
             NugetHelper(build).RestorePackages();

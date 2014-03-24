@@ -41,6 +41,18 @@ namespace BuildCs.Nuget
                 args.Timeout);
         }
 
+        public void Push(BuildItem nupkgFile, Action<PushArgs> config)
+        {
+            var args = new PushArgs();
+            if (config != null)
+                config(args);
+
+            ExecNuget(
+                GetExecutable(args.ToolPath),
+                "push \"{0}\" ".F(nupkgFile) + GetArguments(args),
+                args.Timeout);
+        }
+
         public void RestorePackage(BuildItem file, Action<RestorePackageArgs> config)
         {
             var args = new RestorePackageArgs();
@@ -49,7 +61,7 @@ namespace BuildCs.Nuget
 
             ExecNuget(
                 GetExecutable(args.ToolPath), 
-                "restore \"{0}\" ".F(file) + GetArguments(args),
+                "restore \"{0}\" ".F(file) + string.Join(" ", GetArguments(args)),
                 args.Timeout);
         }
 
@@ -69,7 +81,7 @@ namespace BuildCs.Nuget
                 throw new BuildCsException("Nuget failed with exit code '{0}'.".F(exitCode));
         }
 
-        private string GetArguments(PackArgs args)
+        private List<string> GetArguments(PackArgs args)
         {
             var list = GetBaseArguments(args);
 
@@ -95,10 +107,29 @@ namespace BuildCs.Nuget
                     list.Add("{0}=\"{1}\"".F(property.Key, property.Value));
             }
 
-            return string.Join(" ", list);
+            return list;
         }
 
-        private string GetArguments(RestorePackageArgs args)
+        private List<string> GetArguments(PushArgs args)
+        {
+            var list = GetBaseArguments(args);
+
+            if (args.ApiKey != null)
+                list.Add(args.ApiKey);
+
+            if (args.Source != null)
+                list.Add("-Source \"{0}\"".F(args.Source));
+
+            if(args.Timeout.HasValue)
+            {
+                list.Add("-Timeout {0}".F(args.Timeout.Value.Seconds));
+                args.Timeout = null; // timeout handled by nuget...
+            }
+
+            return list;
+        }
+
+        private List<string> GetArguments(RestorePackageArgs args)
         {
             var list = GetBaseArguments(args);
 
@@ -108,7 +139,7 @@ namespace BuildCs.Nuget
             if (args.Sources != null)
                 args.Sources.Each(s => list.Add("-Source \"{0}\"".F(s)));
 
-            return string.Join(" ", list);
+            return list;
         }
 
         private List<string> GetBaseArguments(NugetArgsBase args)
