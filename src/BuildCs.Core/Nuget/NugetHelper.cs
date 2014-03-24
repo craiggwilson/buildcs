@@ -13,20 +13,26 @@ namespace BuildCs.Nuget
     public class NugetHelper
     {
         private readonly FileSystemHelper _fileSystem;
-        private readonly ProcessHelper _processHelper;
+        private readonly ProcessHelper _process;
         private readonly BuildTracer _tracer;
 
-        public NugetHelper(BuildTracer tracer, FileSystemHelper fileSystem, ProcessHelper processHelper)
+        public NugetHelper(BuildTracer tracer, FileSystemHelper fileSystem, ProcessHelper process)
         {
             _fileSystem = fileSystem;
-            _processHelper = processHelper;
+            _process = process;
             _tracer = tracer;
         }
 
-        public void RestorePackages()
+        public void Install(string packageId, Action<InstallPackageArgs> config)
         {
-            var packageConfigs = new BuildGlob().Include("**/*.sln");
-            packageConfigs.Each(pc => RestorePackage(pc, null));
+            var args = new InstallPackageArgs();
+            if (config != null)
+                config(args);
+
+            ExecNuget(
+                GetExecutable(args.ToolPath),
+                "install {0} ".F(packageId) + GetArguments(args),
+                args.Timeout);
         }
 
         public void Pack(BuildItem nuspecFile, Action<PackArgs> config)
@@ -53,6 +59,12 @@ namespace BuildCs.Nuget
                 args.Timeout);
         }
 
+        public void RestorePackages()
+        {
+            var packageConfigs = new BuildGlob().Include("**/*.sln");
+            packageConfigs.Each(pc => RestorePackage(pc, null));
+        }
+
         public void RestorePackage(BuildItem file, Action<RestorePackageArgs> config)
         {
             var args = new RestorePackageArgs();
@@ -61,13 +73,13 @@ namespace BuildCs.Nuget
 
             ExecNuget(
                 GetExecutable(args.ToolPath), 
-                "restore \"{0}\" ".F(file) + string.Join(" ", GetArguments(args)),
+                "restore \"{0}\" ".F(file) + GetArguments(args),
                 args.Timeout);
         }
 
         private void ExecNuget(string exe, string args, TimeSpan? timeout)
         {
-            var exitCode = _processHelper.Exec(p =>
+            var exitCode = _process.Exec(p =>
             {
                 p.StartInfo.FileName = exe;
                 p.StartInfo.Arguments = args;
@@ -81,11 +93,32 @@ namespace BuildCs.Nuget
                 throw new BuildCsException("Nuget failed with exit code '{0}'.".F(exitCode));
         }
 
-        private List<string> GetArguments(PackArgs args)
+        private string GetArguments(InstallPackageArgs args)
         {
             var list = GetBaseArguments(args);
 
-            if (args.NonInteractive)
+            if (args.ExcludeVersion.HasValue && args.ExcludeVersion.Value)
+                list.Add("-ExcludeVersion");
+
+            if (!args.NonInteractive.HasValue || args.NonInteractive.Value)
+                list.Add("-NonInteractive");
+
+            if (args.OutputDirectory != null)
+                list.Add("-OutputDirectory \"{0}\"".F(args.OutputDirectory));
+
+            if (args.PreRelease.HasValue && args.PreRelease.Value)
+                list.Add("-Prerelease");
+
+            args.Sources.Each(s => list.Add("-Source \"{0}\"".F(s)));
+
+            return string.Join(" ", list);
+        }
+
+        private string GetArguments(PackArgs args)
+        {
+            var list = GetBaseArguments(args);
+
+            if (!args.NonInteractive.HasValue || args.NonInteractive.Value)
                 list.Add("-NonInteractive");
 
             if (args.BasePath != null)
@@ -107,10 +140,10 @@ namespace BuildCs.Nuget
                     list.Add("{0}=\"{1}\"".F(property.Key, property.Value));
             }
 
-            return list;
+            return string.Join(" ", list);
         }
 
-        private List<string> GetArguments(PushArgs args)
+        private string GetArguments(PushArgs args)
         {
             var list = GetBaseArguments(args);
 
@@ -126,20 +159,19 @@ namespace BuildCs.Nuget
                 args.Timeout = null; // timeout handled by nuget...
             }
 
-            return list;
+            return string.Join(" ", list);
         }
 
-        private List<string> GetArguments(RestorePackageArgs args)
+        private string GetArguments(RestorePackageArgs args)
         {
             var list = GetBaseArguments(args);
 
             if (args.OutputDirectory != null)
                 list.Add("-OutputDirectory \"{0}\"".F(args.OutputDirectory));
 
-            if (args.Sources != null)
-                args.Sources.Each(s => list.Add("-Source \"{0}\"".F(s)));
+            args.Sources.Each(s => list.Add("-Source \"{0}\"".F(s)));
 
-            return list;
+            return string.Join(" ", list);
         }
 
         private List<string> GetBaseArguments(NugetArgsBase args)
@@ -160,7 +192,11 @@ namespace BuildCs.Nuget
             if (toolPath != null)
                 return toolPath;
 
-            return new BuildGlob().Include("**/NuGet.exe").FirstOrDefault();
+            toolPath = new BuildGlob().Include("**/NuGet.exe").FirstOrDefault();
+            if (toolPath == null)
+                throw new BuildCsException("Unabled to find nuget.exe");
+
+            return toolPath;
         }
     }
 }

@@ -58,6 +58,7 @@
     <Compile Include="Nuget\NugetVerbosity.cs" />
     <Compile Include="Nuget\PushArgs.cs" />
     <Compile Include="Nuget\PackArgs.cs" />
+    <Compile Include="Nuget\InstallPackageArgs.cs" />
     <Compile Include="Nuget\RestorePackageArgs.cs" />
     <Compile Include="Processes\Extensions.cs" />
     <Compile Include="BuildCsException.cs" />
@@ -86,6 +87,10 @@
     <Compile Include="Tracing\BuildTracer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tracing\ConsoleBuildTracer.cs" />
+    <Compile Include="Xunit\Extensions.cs" />
+    <Compile Include="Xunit\XunitArgs.cs" />
+    <Compile Include="Xunit\XunitErrorLevel.cs" />
+    <Compile Include="Xunit\XunitHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

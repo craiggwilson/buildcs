@@ -17,11 +17,11 @@ namespace BuildCs.MsBuild
         private readonly ProcessHelper _processHelper;
         private readonly BuildTracer _tracer;
 
-        public MsBuildHelper(BuildTracer tracer, EnvironmentHelper environment, FileSystemHelper fileSystem, ProcessHelper processHelper)
+        public MsBuildHelper(BuildTracer tracer, EnvironmentHelper environment, FileSystemHelper fileSystem, ProcessHelper process)
         {
             _environment = environment;
             _fileSystem = fileSystem;
-            _processHelper = processHelper;
+            _processHelper = process;
             _tracer = tracer;
             MsBuildSearchPaths = new List<BuildItem>
             {

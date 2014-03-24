@@ -13,13 +13,12 @@ namespace BuildCs.Nuget
 
         public PackArgs()
         {
-            NonInteractive = true;
             _properties = new Dictionary<string, string>();
         }
 
         public BuildItem BasePath { get; set; }
 
-        public bool NonInteractive { get; set; }
+        public bool? NonInteractive { get; set; }
 
         public BuildItem OutputDirectory { get; set; }
 
