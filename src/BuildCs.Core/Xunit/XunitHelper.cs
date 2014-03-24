@@ -50,14 +50,14 @@ namespace BuildCs.XUnit
             if (args.Verbose.HasValue && !args.Verbose.Value)
                 list.Add("/silent");
 
-            if (args.HtmlOutput != null)
-                list.Add("/html \"{0}\"".F(args.HtmlOutput));
+            if (args.HtmlOutputPath != null)
+                list.Add("/html \"{0}\"".F(args.HtmlOutputPath));
 
-            if(args.NUnitXmlOutput != null)
-                list.Add("/nunit \"{0}\"".F(args.NUnitXmlOutput));
+            if(args.NUnitXmlOutputPath != null)
+                list.Add("/nunit \"{0}\"".F(args.NUnitXmlOutputPath));
 
-            if (args.XmlOutput != null)
-                list.Add("/xml \"{0}\"".F(args.XmlOutput));
+            if (args.XmlOutputPath != null)
+                list.Add("/xml \"{0}\"".F(args.XmlOutputPath));
 
             if (args.IncludedTraits.Count > 0)
                 args.IncludedTraits.Each(t => list.Add("/trait=\"{0}\"".F(t)));

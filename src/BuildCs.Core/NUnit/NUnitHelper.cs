@@ -57,7 +57,7 @@ namespace BuildCs.NUnit
                 list.Add("-labels");
 
             if (args.NoLogo.HasValue && args.NoLogo.Value)
-                list.Add("-noshadow");
+                list.Add("-nologo");
 
             if (args.ShadowCopy.HasValue && !args.ShadowCopy.Value)
                 list.Add("-noshadow");

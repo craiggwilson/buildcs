@@ -28,11 +28,11 @@ namespace BuildCs.XUnit
             get { return _includedTraits; }
         }
 
-        public BuildItem HtmlOutput { get; set; }
+        public BuildItem HtmlOutputPath { get; set; }
 
-        public BuildItem NUnitXmlOutput { get; set; }
+        public BuildItem NUnitXmlOutputPath { get; set; }
 
-        public BuildItem XmlOutput { get; set; }
+        public BuildItem XmlOutputPath { get; set; }
 
         public bool? ShadowCopy { get; set; }
 

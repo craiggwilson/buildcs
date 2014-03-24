@@ -7,7 +7,7 @@ using Xunit;
 
 namespace BuildCs.Sample.Tests
 {
-    public class SampleTests
+    public class SampleXunitTests
     {
         [Fact]
         public void ToString_should_return_Hello()
