@@ -28,6 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ScriptCs.BuildCs.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ScriptCs.Contracts">
@@ -54,6 +55,10 @@
     <ProjectReference Include="..\BuildCs.Core\BuildCs.Core.csproj">
       <Project>{170f4bc3-4c76-4f70-9fcf-d47eed37fdd7}</Project>
       <Name>BuildCs.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BuildCs.Zip\BuildCs.Zip.csproj">
+      <Project>{7a922d6c-d3c7-4381-9ad8-0e1ebd223e37}</Project>
+      <Name>BuildCs.Zip</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

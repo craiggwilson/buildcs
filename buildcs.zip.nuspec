@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>buildcs.zip</id>
+    <version>0.0.0</version>
+    <title>BuildCs Zip</title>
+    <authors>Craig Wilson</authors>
+    <owners>Craig Wilson</owners>
+    <description>Zip extensions for BuildCs.</description>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/craiggwilson/buildcs/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/craiggwilson/buildcs</projectUrl>
+    <tags>buildcs build zip</tags>
+    <language>en-US</language>
+    <copyright>Copyright 2014 Craig Wilson</copyright>
+    <dependencies>
+      <dependency id="buildcs.core" version="0.1" />
+      <dependency id="DotNetZip" version="1.9.2" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="artifacts\bin\BuildCs.Zip.dll" target="lib\net45" />
+    <file src="artifacts\bin\BuildCs.Zip.pdb" target="lib\net45" />
+    <file src="artifacts\bin\BuildCs.Zip.xml" target="lib\net45" />
+    <file src="src\BuildCs.Zip\**\*.cs" target="src\BuildCs.Zip" />
+  </files>
+</package>

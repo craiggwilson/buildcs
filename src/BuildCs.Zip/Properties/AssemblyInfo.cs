@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BuildCs.Sample.Tests")]
+[assembly: AssemblyTitle("BuildCs.Zip")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BuildCs.Sample.Tests")]
+[assembly: AssemblyProduct("BuildCs.Zip")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("43e4a018-3e2b-40c2-9135-9b64ec672d4b")]
+[assembly: Guid("107455a9-611b-4707-8b25-468179f55b83")]
 
 // Version information for an assembly consists of the following four values:
 //

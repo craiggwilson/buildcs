@@ -21,12 +21,22 @@ namespace BuildCs.Nuget
 
         public static void NugetPack(this IBuild build, BuildItem nuspecFile, Action<PackArgs> config)
         {
-            NugetHelper(build).Pack(nuspecFile, config);
+            NugetPack(build, new BuildItem[] { nuspecFile }, config);
+        }
+
+        public static void NugetPack(this IBuild build, IEnumerable<BuildItem> nuspecFiles, Action<PackArgs> config)
+        {
+            nuspecFiles.Each(nuspecFile => NugetHelper(build).Pack(nuspecFile, config));
         }
 
         public static void NugetPush(this IBuild build, BuildItem nupkgFile, Action<PushArgs> config)
         {
-            NugetHelper(build).Push(nupkgFile, config);
+            NugetPush(build, new BuildItem[] { nupkgFile }, config);
+        }
+
+        public static void NugetPush(this IBuild build, IEnumerable<BuildItem> nupkgFiles, Action<PushArgs> config)
+        {
+            nupkgFiles.Each(nupkgFile => NugetHelper(build).Push(nupkgFile, config));
         }
 
         public static void NugetRestorePackages(this IBuild build)

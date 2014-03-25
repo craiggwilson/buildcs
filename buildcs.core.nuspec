@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>buildcs.core</id>
+    <version>0.0.0</version>
+    <title>BuildCs Core</title>
+    <authors>Craig Wilson</authors>
+    <owners>Craig Wilson</owners>
+    <description>Utilities useful for using .NET to build a project.</description>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/craiggwilson/buildcs/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/craiggwilson/buildcs</projectUrl>
+    <tags>buildcs build</tags>
+    <language>en-US</language>
+    <copyright>Copyright 2014 Craig Wilson</copyright>
+  </metadata>
+  <files>
+    <file src="artifacts\bin\BuildCs.Core.dll" target="lib\net45" />
+    <file src="artifacts\bin\BuildCs.Core.pdb" target="lib\net45" />
+    <file src="artifacts\bin\BuildCs.Core.xml" target="lib\net45" />
+    <file src="src\BuildCs.Core\**\*.cs" target="src\BuildCs.Core" />
+  </files>
+</package>
