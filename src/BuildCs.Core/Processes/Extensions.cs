@@ -10,17 +10,17 @@ namespace BuildCs.Processes
 {
     public static class Extensions
     {
-        public static ProcessHelper ProcessHelper(this Build build)
+        public static ProcessHelper ProcessHelper(this IBuild build)
         {
             return build.GetService<ProcessHelper>();
         }
 
-        public static int Exec(this Build build, string filename, string arguments)
+        public static int Exec(this IBuild build, string filename, string arguments)
         {
             return Exec(build, filename, arguments, Timeout.InfiniteTimeSpan);
         }
 
-        public static int Exec(this Build build, string filename, string arguments, TimeSpan timeout)
+        public static int Exec(this IBuild build, string filename, string arguments, TimeSpan timeout)
         {
             return Exec(build, config =>
             {
@@ -32,7 +32,7 @@ namespace BuildCs.Processes
             });
         }
 
-        public static int Exec(this Build build, Action<ProcessArgs> config)
+        public static int Exec(this IBuild build, Action<ProcessArgs> config)
         {
             return ProcessHelper(build).Exec(config);
         }

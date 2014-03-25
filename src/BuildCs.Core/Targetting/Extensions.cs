@@ -5,22 +5,22 @@ namespace BuildCs.Targetting
 {
     public static class Extensions
     {
-        public static BuildTargetManager TargetManager(this Build build)
+        public static BuildTargetManager TargetManager(this IBuild build)
         {
             return build.GetService<BuildTargetManager>();
         }
 
-        public static BuildTargetRunner TargetRunner(this Build build)
+        public static BuildTargetRunner TargetRunner(this IBuild build)
         {
             return build.GetService<BuildTargetRunner>();
         }
 
-        public static void Run(this Build build, params string[] targets)
+        public static void Run(this IBuild build, params string[] targets)
         {
             build.TargetRunner().RunTargets(targets);
         }
 
-        public static void RunTargetOrDefault(this Build build, string defaultTarget)
+        public static void RunTargetOrDefault(this IBuild build, string defaultTarget)
         {
             var targetNames = build.CommandLine().TargetNames;
             if (targetNames.Count == 0)
@@ -29,7 +29,7 @@ namespace BuildCs.Targetting
             Run(build, targetNames.ToArray());
         }
 
-        public static IBuildTargetBuilder Target(this Build build, string name)
+        public static IBuildTargetBuilder Target(this IBuild build, string name)
         {
             return build.TargetManager().AddTarget(name);
         }

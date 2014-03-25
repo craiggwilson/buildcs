@@ -5,9 +5,9 @@ using System.Reflection;
 using BuildCs;
 using ScriptCs.Contracts;
 
-namespace BuildCs
+namespace ScriptCs.BuildCs
 {
-    public class Build : IScriptPackContext
+    public class Build : IBuild, IScriptPackContext
     {
         private readonly Dictionary<Type, object> _services;
 

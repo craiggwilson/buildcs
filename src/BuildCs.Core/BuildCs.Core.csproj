@@ -33,9 +33,6 @@
     <Reference Include="Ionic.Zip">
       <HintPath>..\packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
-    <Reference Include="ScriptCs.Contracts">
-      <HintPath>..\packages\ScriptCs.Contracts.0.9.0\lib\net45\ScriptCs.Contracts.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -46,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Build.cs" />
     <Compile Include="FileSystem\BuildGlob.cs" />
     <Compile Include="FileSystem\BuildItem.cs" />
     <Compile Include="FileSystem\Extensions.cs" />
     <Compile Include="FileSystem\FileSystemHelper.cs" />
+    <Compile Include="IBuild.cs" />
     <Compile Include="MsBuild\Extensions.cs" />
     <Compile Include="MsBuild\MsBuildArgs.cs" />
     <Compile Include="MsBuild\MsBuildHelper.cs" />
@@ -75,7 +72,6 @@
     <Compile Include="Targetting\BuildTargetStatus.cs" />
     <Compile Include="Tracing\BuildMessage.cs" />
     <Compile Include="Processes\ProcessHelper.cs" />
-    <Compile Include="BuildScriptPack.cs" />
     <Compile Include="Processes\ProcessArgs.cs" />
     <Compile Include="Targetting\BuildTarget.cs" />
     <Compile Include="Targetting\BuildTargetManager.cs" />

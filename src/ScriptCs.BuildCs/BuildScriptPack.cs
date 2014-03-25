@@ -1,6 +1,6 @@
 ﻿using ScriptCs.Contracts;
 
-namespace BuildCs
+namespace ScriptCs.BuildCs
 {
     public class BuildScriptPack : IScriptPack
     {
@@ -13,6 +13,7 @@ namespace BuildCs
 
         public void Initialize(IScriptPackSession session)
         {
+            session.ImportNamespace("ScriptCs.BuildCs");
             session.ImportNamespace("BuildCs");
             session.ImportNamespace("BuildCs.FileSystem");
             session.ImportNamespace("BuildCs.MsBuild");

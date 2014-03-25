@@ -4,17 +4,17 @@ namespace BuildCs
 {
     public static partial class Extensions
     {
-        public static CommandLineHelper CommandLine(this Build build)
+        public static CommandLineHelper CommandLine(this IBuild build)
         {
             return build.GetService<CommandLineHelper>();
         }
 
-        public static string GetParameter(this Build build, string name)
+        public static string GetParameter(this IBuild build, string name)
         {
             return build.CommandLine().GetParameter(name);
         }
 
-        public static string GetParameterOrDefault(this Build build, string name, string defaultValue)
+        public static string GetParameterOrDefault(this IBuild build, string name, string defaultValue)
         {
             if (build.CommandLine().HasParameter(name))
                 return build.GetParameter(name);
@@ -22,7 +22,7 @@ namespace BuildCs
             return defaultValue;
         }
 
-        public static bool HasParameter(this Build build, string name)
+        public static bool HasParameter(this IBuild build, string name)
         {
             return build.CommandLine().HasParameter(name);
         }

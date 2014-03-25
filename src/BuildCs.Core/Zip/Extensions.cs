@@ -9,12 +9,12 @@ namespace BuildCs.Zip
 {
     public static class Extensions
     {
-        public static ZipHelper ZipHelper(this Build build)
+        public static ZipHelper ZipHelper(this IBuild build)
         {
             return build.GetService<ZipHelper>();
         }
 
-        public static void Zip(this Build build, BuildItem outputPath, Action<ZipArgs> config)
+        public static void Zip(this IBuild build, BuildItem outputPath, Action<ZipArgs> config)
         {
             ZipHelper(build).Zip(outputPath, config);
         }
