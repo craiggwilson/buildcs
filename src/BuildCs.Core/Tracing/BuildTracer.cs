@@ -62,7 +62,7 @@ namespace BuildCs.Tracing
             Write(BuildMessageType.Fatal, message, args);
         }
 
-        private void Write(BuildMessageType type, string message, object[] args)
+        public void Write(BuildMessageType type, string message, params object[] args)
         {
             if (args != null && args.Length > 0)
                 message = string.Format(message, args);

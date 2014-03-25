@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="ScriptCs.Contracts">
       <HintPath>..\packages\ScriptCs.Contracts.0.9.0\lib\net45\ScriptCs.Contracts.dll</HintPath>
     </Reference>
@@ -93,6 +96,10 @@
     <Compile Include="XUnit\Extensions.cs" />
     <Compile Include="XUnit\XUnitArgs.cs" />
     <Compile Include="XUnit\XUnitHelper.cs" />
+    <Compile Include="Zip\Extensions.cs" />
+    <Compile Include="Zip\ZipArgs.cs" />
+    <Compile Include="Zip\ZipBuildItem.cs" />
+    <Compile Include="Zip\ZipHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

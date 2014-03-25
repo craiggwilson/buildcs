@@ -76,18 +76,16 @@ namespace BuildCs.Targetting
         {
             var maxLength = chain.Max(x => x.Target.Name.Length);
             var anyFailed = chain.Any(x => x.Status == BuildTargetStatus.Failed);
-            Action<string> trace;
-            if(anyFailed)
-                trace = m => _tracer.Error(m);
-            else
-                trace = m => _tracer.Success(m);
+            var type = BuildMessageType.Success;
+            if (anyFailed)
+                type = BuildMessageType.Error;
 
-            trace("");
-            trace("---------------------------------------------------------------------");
-            trace("Build Time Report");
-            trace("---------------------------------------------------------------------");
-            trace("Target".PadRight(maxLength) + "    Duration");
-            trace("------".PadRight(maxLength) + "    --------");
+            _tracer.Write(type, "");
+            _tracer.Write(type, "---------------------------------------------------------------------");
+            _tracer.Write(type, "Build Time Report");
+            _tracer.Write(type, "---------------------------------------------------------------------");
+            _tracer.Write(type, "Target".PadRight(maxLength) + "    Duration");
+            _tracer.Write(type, "------".PadRight(maxLength) + "    --------");
             foreach(var context in chain)
             {
                 var text = context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString();
@@ -107,12 +105,12 @@ namespace BuildCs.Targetting
                         break;
                 }
             }
-            trace("------".PadRight(maxLength) + "    --------");
+            _tracer.Write(type, "------".PadRight(maxLength) + "    --------");
             var status = anyFailed
                 ? "Failed"
                 : "Ok";
-            trace("Result".PadRight(maxLength + 4) + status);
-            trace("---------------------------------------------------------------------");
+            _tracer.Write(type, "Result".PadRight(maxLength + 4) + status);
+            _tracer.Write(type, "---------------------------------------------------------------------");
         }
     }
 }

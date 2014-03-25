@@ -48,6 +48,16 @@ build.Target("Test")
 		});
 	});
 
+build.Target("Zip")
+	.DependsOn("Build")
+	.Do(() =>
+	{
+		build.Zip(artifactsDir + "Sample-{0}.zip".F(semVersion), args =>
+		{
+			args.AddItem("artifacts/bin/BuildCs.Sample.dll", ".");
+		});
+	});
+
 build.Target("NugetPack")
 	.DependsOn("Build")
 	.Do(() =>

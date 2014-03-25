@@ -22,6 +22,7 @@ namespace BuildCs
             session.ImportNamespace("BuildCs.Targetting");
             session.ImportNamespace("BuildCs.Tracing");
             session.ImportNamespace("BuildCs.XUnit");
+            session.ImportNamespace("BuildCs.Zip");
 
             _build = new Build(session.ScriptArgs);
         }
