@@ -4,11 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BuildCs.FileSystem;
 
-namespace BuildCs
+namespace BuildCs.FileSystem
 {
-    public static partial class Extensions
+    public static class Extensions
     {
         public static FileSystemHelper FileSystemHelper(this Build build)
         {

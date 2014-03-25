@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using BuildCs.Processes;
+using BuildCs.Tracing;
 
-namespace BuildCs
+namespace BuildCs.Processes
 {
-    public static partial class Extensions
+    public static class Extensions
     {
         public static ProcessHelper ProcessHelper(this Build build)
         {

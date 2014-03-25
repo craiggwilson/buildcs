@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using BuildCs.Targetting;
 
-namespace BuildCs
+namespace BuildCs.Targetting
 {
-    public static partial class Extensions
+    public static class Extensions
     {
         public static BuildTargetManager TargetManager(this Build build)
         {

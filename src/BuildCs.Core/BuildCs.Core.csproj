@@ -65,7 +65,7 @@
     <Compile Include="NUnit\NUnitArgs.cs" />
     <Compile Include="Processes\Extensions.cs" />
     <Compile Include="BuildCsException.cs" />
-    <Compile Include="BuildCommandLine.cs" />
+    <Compile Include="CommandLineHelper.cs" />
     <Compile Include="EnvironmentHelper.cs" />
     <Compile Include="Targetting\BuildCsFailTargetException.cs" />
     <Compile Include="Targetting\BuildCsSkipTargetException.cs" />

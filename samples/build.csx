@@ -1,11 +1,5 @@
-using BuildCs.MsBuild;
-using BuildCs.Nuget;
-using BuildCs.NUnit;
-using BuildCs.XUnit;
-
 var build = Require<Build>();
 
-var config = build.GetParameterOrDefault("config", "Release");
 var semVersion = "0.1.0-alpha";
 
 var baseDir = build.CurrentDirectory();
@@ -28,6 +22,7 @@ build.Target("Build")
 		build.MsBuild(srcDir.Glob("**/*.csproj"), args => 
 		{
 			args.AddProperty("OutputPath", binDir);
+			args.AddProperty("Configuration", build.GetParameterOrDefault("config", "Release"));
 			args.AddTarget("Build");
 			args.Verbosity = MsBuildVerbosity.Quiet;
 		});
@@ -66,4 +61,4 @@ build.Target("NugetPack")
 		});
 	});
 
-build.RunTargetOrDefault("Test");
+build.RunTargetOrDefault("Build");

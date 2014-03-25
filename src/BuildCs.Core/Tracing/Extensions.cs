@@ -1,6 +1,5 @@
-﻿using BuildCs.Tracing;
-
-namespace BuildCs
+﻿
+namespace BuildCs.Tracing
 {
     public static partial class Extensions
     {

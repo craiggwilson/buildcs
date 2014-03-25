@@ -15,7 +15,7 @@ namespace BuildCs
         {
             _services = new Dictionary<Type, object>();
             _services.Add(typeof(Build), this);
-            _services.Add(typeof(BuildCommandLine), new BuildCommandLine(args));
+            _services.Add(typeof(CommandLineHelper), new CommandLineHelper(args));
         }
 
         public T GetService<T>()

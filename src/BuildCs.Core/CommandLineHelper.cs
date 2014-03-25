@@ -3,12 +3,12 @@ using System.Linq;
 
 namespace BuildCs
 {
-    public class BuildCommandLine
+    public class CommandLineHelper
     {
         private readonly Dictionary<string, string> _parameters;
         private readonly List<string> _targetNames;
 
-        public BuildCommandLine(IEnumerable<string> args)
+        public CommandLineHelper(IEnumerable<string> args)
         {
             _targetNames = args
                 .TakeWhile(s => !s.Contains('='))

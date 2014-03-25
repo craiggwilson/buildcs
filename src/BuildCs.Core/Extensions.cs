@@ -4,9 +4,9 @@ namespace BuildCs
 {
     public static partial class Extensions
     {
-        public static BuildCommandLine CommandLine(this Build build)
+        public static CommandLineHelper CommandLine(this Build build)
         {
-            return build.GetService<BuildCommandLine>();
+            return build.GetService<CommandLineHelper>();
         }
 
         public static string GetParameter(this Build build, string name)

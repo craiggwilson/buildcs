@@ -14,6 +14,14 @@ namespace BuildCs
         public void Initialize(IScriptPackSession session)
         {
             session.ImportNamespace("BuildCs");
+            session.ImportNamespace("BuildCs.FileSystem");
+            session.ImportNamespace("BuildCs.MsBuild");
+            session.ImportNamespace("BuildCs.Nuget");
+            session.ImportNamespace("BuildCs.NUnit");
+            session.ImportNamespace("BuildCs.Processes");
+            session.ImportNamespace("BuildCs.Targetting");
+            session.ImportNamespace("BuildCs.Tracing");
+            session.ImportNamespace("BuildCs.XUnit");
 
             _build = new Build(session.ScriptArgs);
         }
