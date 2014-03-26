@@ -23,7 +23,7 @@ namespace BuildCs.FileSystem
         {
             if (!Directory.Exists(item))
             {
-                _tracer.Info("Creating directory '{0}'.", item);
+                _tracer.Log("Creating directory '{0}'.", item);
                 Directory.CreateDirectory(item);
             }
         }
@@ -37,7 +37,7 @@ namespace BuildCs.FileSystem
         {
             if (DirectoryExists(item))
             {
-                _tracer.Info("Deleting directory '{0}'.", item);
+                _tracer.Log("Deleting directory '{0}'.", item);
                 Directory.Delete(item, true);
             }
         }
@@ -46,7 +46,7 @@ namespace BuildCs.FileSystem
         {
             if (File.Exists(item))
             {
-                _tracer.Info("Deleting file '{0}'.", item);
+                _tracer.Log("Deleting file '{0}'.", item);
                 File.Delete(item);
             }
         }
@@ -66,6 +66,15 @@ namespace BuildCs.FileSystem
             return directories
                 .Select(dir => dir + name)
                 .FirstOrDefault(file => FileExists(file));
+        }
+
+        public void WriteToFile(BuildItem outputPath, IEnumerable<string> lines, bool append = false, Encoding encoding = null)
+        {
+            _tracer.Log("Creating file '{0}'.", outputPath);
+            using (var writer = new StreamWriter(outputPath, append, encoding ?? Encoding.UTF8))
+            {
+                lines.Each(l => writer.WriteLine(l));
+            }
         }
     }
 }

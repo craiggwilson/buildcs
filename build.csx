@@ -12,6 +12,19 @@ var slnFile = srcDir + "BuildCs.sln";
 
 build.Target("Clean").Do(() => build.DeleteDirectory(artifactsDir));
 
+build.Target("AssemblyInfo")
+    .Do(() =>
+    {
+        build.GenerateCSharpAssemblyInfo(srcDir + "GlobalAssemblyInfo.cs", args =>
+        {
+            args.AddAssemblyCopyrightAttribute("Copyright 2014 Craig Wilson");
+            args.AddAssemblyVersionAttribute(new Version(0, 1, 0, 0)); //TODO: fix this
+            args.AddAssemblyInformationalVersionAttribute(semVersion);
+            args.AddAssemblyFileVersionAttribute(new Version(0, 1, 0, 0)); //TODO: fix this
+            args.AddAssemblyConfigurationAttribute("Release");
+        });
+    });
+
 build.Target("Build")
     .DependsOn("Clean")
     .Do(() =>

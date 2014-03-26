@@ -43,6 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyInfo\AssemblyInfoAttribute.cs" />
+    <Compile Include="AssemblyInfo\AssemblyInfoHelper.cs" />
+    <Compile Include="AssemblyInfo\Extensions.cs" />
+    <Compile Include="AssemblyInfo\GenerateArgs.cs" />
     <Compile Include="FileSystem\BuildGlob.cs" />
     <Compile Include="FileSystem\BuildItem.cs" />
     <Compile Include="FileSystem\Extensions.cs" />

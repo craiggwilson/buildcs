@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Build.cs" />
     <Compile Include="BuildScriptPack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

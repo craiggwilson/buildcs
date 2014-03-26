@@ -6,7 +6,7 @@
     <title>BuildCs Core</title>
     <authors>Craig Wilson</authors>
     <owners>Craig Wilson</owners>
-    <description>Utilities useful for using .NET to build a project.</description>
+    <description>.NET build framework</description>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://github.com/craiggwilson/buildcs/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/craiggwilson/buildcs</projectUrl>
