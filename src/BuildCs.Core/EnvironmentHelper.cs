@@ -8,14 +8,24 @@ namespace BuildCs
 {
     public class EnvironmentHelper
     {
+        public bool IsMac
+        {
+            get { return Environment.OSVersion.Platform == PlatformID.MacOSX; }
+        }
+
+        public bool IsLinux
+        {
+            get { return IsMac || IsUnix; }
+        }
+
         public bool IsMono
         {
-            get
-            {
-                return ForceMono
-                    || Environment.OSVersion.Platform == PlatformID.Unix
-                    || Environment.OSVersion.Platform == PlatformID.MacOSX;
-            }
+            get { return ForceMono || IsLinux; }
+        }
+
+        public bool IsUnix
+        {
+            get { return Environment.OSVersion.Platform == PlatformID.Unix; }
         }
 
         public bool ForceMono { get; set; }

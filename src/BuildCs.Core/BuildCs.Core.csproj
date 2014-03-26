@@ -54,6 +54,8 @@
     <Compile Include="FileSystem\BuildItem.cs" />
     <Compile Include="FileSystem\Extensions.cs" />
     <Compile Include="FileSystem\FileSystemHelper.cs" />
+    <Compile Include="Git\Extensions.cs" />
+    <Compile Include="Git\GitHelper.cs" />
     <Compile Include="IBuild.cs" />
     <Compile Include="MsBuild\Extensions.cs" />
     <Compile Include="MsBuild\MsBuildArgs.cs" />

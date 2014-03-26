@@ -14,14 +14,14 @@ namespace BuildCs.MsBuild
     {
         private readonly EnvironmentHelper _environment;
         private readonly FileSystemHelper _fileSystem;
-        private readonly ProcessHelper _processHelper;
+        private readonly ProcessHelper _process;
         private readonly BuildTracer _tracer;
 
         public MsBuildHelper(BuildTracer tracer, EnvironmentHelper environment, FileSystemHelper fileSystem, ProcessHelper process)
         {
             _environment = environment;
             _fileSystem = fileSystem;
-            _processHelper = process;
+            _process = process;
             _tracer = tracer;
             MsBuildSearchPaths = new List<BuildItem>
             {
@@ -49,7 +49,7 @@ namespace BuildCs.MsBuild
 
         private void BuildProject(BuildItem project, MsBuildArgs args)
         {
-            var exitCode = _processHelper.Exec(p =>
+            var exitCode = _process.Exec(p =>
             {
                 p.StartInfo.FileName = GetExecutable(args.ToolPath);
                 p.StartInfo.Arguments = GetArguments(args) + " \"{0}\"".F(project);
@@ -115,7 +115,7 @@ namespace BuildCs.MsBuild
                 return ev;
 
             return _fileSystem.FindFile("msbuild.exe", MsBuildSearchPaths) 
-                ?? "msbuild.exe";
+                ?? "msbuild";
         }
     }
 }

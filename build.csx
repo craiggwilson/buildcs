@@ -7,15 +7,22 @@ var srcDir = baseDir + "src";
 var artifactsDir = baseDir + "artifacts";
 var binDir = artifactsDir + "bin";
 
+var assemblyInfoFile = srcDir + "GlobalAssemblyInfo.cs";
 var nuspecFiles = baseDir.Glob("*.nuspec");
 var slnFile = srcDir + "BuildCs.sln";
 
-build.Target("Clean").Do(() => build.DeleteDirectory(artifactsDir));
+build.Target("Clean")
+    .Do(() => 
+    {
+        build.DeleteDirectory(artifactsDir);
+        build.GitExec(baseDir, "checkout {0}".F(assemblyInfoFile));
+        build.GitExec(baseDir, "status");
+    });
 
 build.Target("AssemblyInfo")
     .Do(() =>
     {
-        build.GenerateCSharpAssemblyInfo(srcDir + "GlobalAssemblyInfo.cs", args =>
+        build.GenerateCSharpAssemblyInfo(assemblyInfoFile, args =>
         {
             args.AddAssemblyCopyrightAttribute("Copyright 2014 Craig Wilson");
             args.AddAssemblyVersionAttribute(new Version(0, 1, 0, 0)); //TODO: fix this
