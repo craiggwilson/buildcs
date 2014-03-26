@@ -35,7 +35,7 @@ namespace BuildCs.MsBuild
 
         public IList<BuildItem> MsBuildSearchPaths { get; set; }
 
-        public void Exec(IEnumerable<BuildItem> projects, Action<MsBuildArgs> config)
+        public void Build(IEnumerable<BuildItem> projects, Action<MsBuildArgs> config)
         {
             if (projects == null)
                 throw new ArgumentNullException("projects");
@@ -51,7 +51,7 @@ namespace BuildCs.MsBuild
         {
             var exitCode = _processHelper.Exec(p =>
             {
-                p.StartInfo.FileName = GetExecutable();
+                p.StartInfo.FileName = GetExecutable(args.ToolPath);
                 p.StartInfo.Arguments = GetArguments(args) + " \"{0}\"".F(project);
                 p.OnErrorMessage = m => _tracer.Error(m);
                 p.OnOutputMessage = m => _tracer.Log(m);
@@ -65,8 +65,11 @@ namespace BuildCs.MsBuild
         {
             var list = new List<string>();
 
-            if (config.Targets != null)
+            if (config.Targets != null && config.Targets.Count > 0)
                 list.Add("/t:" + string.Join(";", config.Targets));
+
+            if (config.NoLogo.HasValue && config.NoLogo.Value)
+                list.Add("/nologo");
 
             if(config.Verbosity.HasValue)
             {
@@ -99,8 +102,11 @@ namespace BuildCs.MsBuild
             return string.Join(" ", list);
         }
 
-        private string GetExecutable()
+        private string GetExecutable(BuildItem toolPath)
         {
+            if (toolPath != null)
+                return toolPath;
+
             if(_environment.IsMono)
                 return "xbuild";
 

@@ -21,7 +21,7 @@ namespace BuildCs.MsBuild
 
         public static void MsBuild(this IBuild build, IEnumerable<BuildItem> projects, Action<MsBuildArgs> config = null)
         {
-            MsBuildHelper(build).Exec(projects, config);
+            MsBuildHelper(build).Build(projects, config);
         }
     }
 }

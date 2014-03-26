@@ -18,6 +18,8 @@ namespace BuildCs.MsBuild
             _targets = new List<string>();
         }
 
+        public bool? NoLogo { get; set; }
+
         public IReadOnlyDictionary<string, string> Properties
         {
             get { return _properties; }
@@ -27,6 +29,8 @@ namespace BuildCs.MsBuild
         {
             get { return _targets; }
         }
+
+        public BuildItem ToolPath { get; set; }
 
         public string ToolsVersion { get; set; }
 

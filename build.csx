@@ -21,7 +21,7 @@ build.Target("Build")
         {
             args.AddProperty("OutputPath", binDir);
             args.AddProperty("Configuration", "Release");
-            args.AddTarget("Build");
+            args.NoLogo = true;
             args.Verbosity = MsBuildVerbosity.Quiet;
         });
     });
