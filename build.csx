@@ -16,7 +16,6 @@ build.Target("Clean")
     {
         build.DeleteDirectory(artifactsDir);
         build.GitExec(baseDir, "checkout {0}".F(assemblyInfoFile));
-        build.GitExec(baseDir, "status");
     });
 
 build.Target("AssemblyInfo")

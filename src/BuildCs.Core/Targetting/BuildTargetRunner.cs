@@ -25,37 +25,34 @@ namespace BuildCs.Targetting
                 .ToList();
 
             var names = string.Join(", ", chain.Select(x => x.Target.Name));
-            _tracer.Info("Building Targets: {0}", names);
-            
-            foreach(var context in chain)
+            using (_tracer.StartBuild(chain.Select(x => x.Target.Name)))
             {
-                Run(context);
-                if(context.Status == BuildTargetStatus.Failed)
-                    break;
+                foreach (var context in chain)
+                {
+                    Run(context);
+                    if (context.Status == BuildTargetStatus.Failed)
+                        break;
+                }
+                WriteSummary(chain);
             }
-
-            WriteSummary(chain);
         }
 
         private void Run(BuildTargetRunContext context)
         {
-            using (_tracer.WithPrefix("[{0}] ".F(context.Target.Name)))
+            using (_tracer.StartTarget(context.Target.Name))
             {
-                _tracer.Info("Beginning at {0:HH:mm:ss}", DateTime.Now);
-
                 var stopwatch = Stopwatch.StartNew();
                 try
                 {
                     context.Target.Run();
                     stopwatch.Stop();
                     context.MarkSuccessful(stopwatch.Elapsed);
-                    _tracer.Info("Completed in {0}", stopwatch.Elapsed);
                 }
                 catch(BuildCsFailTargetException ex)
                 {
                     stopwatch.Stop();
                     context.MarkFailed(stopwatch.Elapsed, ex);
-                    _tracer.Fatal("Failed. {0}", ex.Message);
+                    _tracer.Error("Failed. {0}", ex.Message);
                 }
                 catch(BuildCsSkipTargetException ex)
                 {
@@ -67,7 +64,7 @@ namespace BuildCs.Targetting
                 {
                     stopwatch.Stop();
                     context.MarkFailed(stopwatch.Elapsed, ex);
-                    _tracer.Fatal("Failed. {0}", ex);
+                    _tracer.Error("Failed. {0}", ex);
                 }
             }
         }
@@ -76,9 +73,9 @@ namespace BuildCs.Targetting
         {
             var maxLength = chain.Max(x => x.Target.Name.Length);
             var anyFailed = chain.Any(x => x.Status == BuildTargetStatus.Failed);
-            var type = BuildMessageType.Success;
+            var type = MessageLevel.Info;
             if (anyFailed)
-                type = BuildMessageType.Error;
+                type = MessageLevel.Error;
 
             _tracer.Write(type, "");
             _tracer.Write(type, "---------------------------------------------------------------------");
@@ -92,7 +89,7 @@ namespace BuildCs.Targetting
                 switch(context.Status)
                 {
                     case BuildTargetStatus.Failed:
-                        _tracer.Fatal(context.Target.Name.PadRight(maxLength + 4) + "Failed");
+                        _tracer.Error(context.Target.Name.PadRight(maxLength + 4) + "Failed");
                         break;
                     case BuildTargetStatus.NotRun:
                         _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Not Run");
@@ -101,7 +98,7 @@ namespace BuildCs.Targetting
                         _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Skipped");
                         break;
                     case BuildTargetStatus.Success:
-                        _tracer.Success(context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString());
+                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString());
                         break;
                 }
             }

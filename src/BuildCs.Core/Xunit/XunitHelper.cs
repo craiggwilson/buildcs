@@ -24,20 +24,23 @@ namespace BuildCs.XUnit
 
         public void Test(IEnumerable<BuildItem> assemblies, Action<XUnitArgs> config)
         {
-            var args = new XUnitArgs();
-            if (config != null)
-                config(args);
-
-            var exitCode = _process.Exec(p =>
+            using (_tracer.StartTask("Xunit"))
             {
-                p.StartInfo.FileName = GetExecutable(args.ToolPath);
-                p.StartInfo.Arguments = string.Join(" ", assemblies.Select(a => "\"{0}\"".F(a))) + " " + GetArguments(args);
-                p.OnErrorMessage = m => _tracer.Error(m);
-                p.OnOutputMessage = m => _tracer.Log(m);
-            });
+                var args = new XUnitArgs();
+                if (config != null)
+                    config(args);
 
-            if (exitCode != 0)
-                throw new BuildCsException("XUnit failed with exit code '{0}'.".F(exitCode));
+                _tracer.Info("Testing '{0}'.", string.Join(", ", assemblies));
+
+                var exitCode = _process.Exec(p =>
+                {
+                    p.StartInfo.FileName = GetExecutable(args.ToolPath);
+                    p.StartInfo.Arguments = string.Join(" ", assemblies.Select(a => "\"{0}\"".F(a))) + " " + GetArguments(args);
+                });
+
+                if (exitCode != 0)
+                    throw new BuildCsException("XUnit failed with exit code '{0}'.".F(exitCode));
+            }
         }
 
         private string GetArguments(XUnitArgs args)

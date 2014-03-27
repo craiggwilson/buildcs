@@ -5,17 +5,15 @@ namespace BuildCs.Tracing
 {
     public class BuildTracer
     {
-        private readonly List<IBuildTraceListener> _listeners;
-        private string _currentPrefix;
+        private readonly List<IBuildListener> _listeners;
 
         public BuildTracer()
         {
-            _currentPrefix = "";
-            _listeners = new List<IBuildTraceListener>();
-            _listeners.Add(new ConsoleBuildTracerListener());
+            _listeners = new List<IBuildListener>();
+            _listeners.Add(new ConsoleBuildListener());
         }
 
-        public void AddListener(IBuildTraceListener listener)
+        public void AddListener(IBuildListener listener)
         {
             _listeners.Add(listener);
         }
@@ -25,64 +23,75 @@ namespace BuildCs.Tracing
             _listeners.Clear();
         }
 
-        public IDisposable WithPrefix(string prefix)
+        public IDisposable StartBuild(IEnumerable<string> targetNames)
         {
-            var prefixer = new Prefixer(this, _currentPrefix);
-            _currentPrefix += prefix;
-            return prefixer;
+            Publish(new StartBuildEvent(targetNames));
+            return new StartStop(this, new StopBuildEvent(targetNames));
+        }
+
+        public IDisposable StartTarget(string name)
+        {
+            Publish(new StartTargetEvent(name));
+            return new StartStop(this, new StopTargetEvent(name));
+        }
+
+        public IDisposable StartTask(string name)
+        {
+            Publish(new StartTaskEvent(name));
+            return new StartStop(this, new StopTaskEvent(name));
+        }
+
+        public void Trace(string message, params object[] args)
+        {
+            Write(MessageLevel.Trace, message, args);
         }
 
         public void Log(string message, params object[] args)
         {
-            Write(BuildMessageType.Log, message, args);
+            Write(MessageLevel.Log, message, args);
         }
 
         public void Info(string message, params object[] args)
         {
-            Write(BuildMessageType.Info, message, args);
+            Write(MessageLevel.Info, message, args);
         }
 
         public void Important(string message, params object[] args)
         {
-            Write(BuildMessageType.Info, message, args);
-        }
-
-        public void Success(string message, params object[] args)
-        {
-            Write(BuildMessageType.Success, message, args);
+            Write(MessageLevel.Info, message, args);
         }
 
         public void Error(string message, params object[] args)
         {
-            Write(BuildMessageType.Error, message, args);
+            Write(MessageLevel.Error, message, args);
         }
 
-        public void Fatal(string message, params object[] args)
-        {
-            Write(BuildMessageType.Fatal, message, args);
-        }
-
-        public void Write(BuildMessageType type, string message, params object[] args)
+        public void Write(MessageLevel type, string message, params object[] args)
         {
             if (args != null && args.Length > 0)
                 message = string.Format(message, args);
-            _listeners.Each(x => x.Write(new BuildMessage(type, _currentPrefix + message)));
+            Publish(new MessageEvent(type, message));
         }
 
-        private class Prefixer : IDisposable
+        private void Publish(BuildEvent @event)
         {
-            private readonly string _previousPrefix;
+            _listeners.Each(x => x.Handle(@event));
+        }
+
+        private class StartStop : IDisposable
+        {
+            private readonly BuildEvent _event;
             private readonly BuildTracer _tracer;
 
-            public Prefixer(BuildTracer tracer, string previousPrefix)
+            public StartStop(BuildTracer tracer, BuildEvent @event)
             {
                 _tracer = tracer;
-                _previousPrefix = previousPrefix;
+                _event = @event;
             }
 
             public void Dispose()
             {
-                _tracer._currentPrefix = _previousPrefix;
+                _tracer.Publish(_event);
             }
         }
     }

@@ -26,6 +26,8 @@ namespace BuildCs.Processes
             var process = new Process();
             process.StartInfo.UseShellExecute = false;
             var args = new ProcessArgs(process.StartInfo);
+            args.OnErrorMessage = m => _tracer.Error(m);
+            args.OnOutputMessage = m => _tracer.Trace(m);
             config(args);
 
             if (args.TraceOutput)
@@ -48,32 +50,35 @@ namespace BuildCs.Processes
 
             AdaptToMonoIfNecessary(process.StartInfo);
 
-            if(TraceProcesses)
-                _tracer.Info("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+            using (_tracer.StartTask("Exec"))
+            {
+                if (TraceProcesses)
+                    _tracer.Log("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 
-            try
-            {
-                process.Start();
-                process.BeginErrorReadLine();
-                process.BeginOutputReadLine();
-            }
-            catch (Exception ex)
-            {
-                _tracer.Error("Start of process '{0} {1}' failed. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, ex);
-            }
-
-            if(!process.WaitForExit(args.Timeout.Milliseconds))
-            {
                 try
                 {
-                    process.Kill();
+                    process.Start();
+                    process.BeginErrorReadLine();
+                    process.BeginOutputReadLine();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    _tracer.Error("Could not kill process '{0} {1}' after '{1}' milliseconds. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, args.Timeout.Milliseconds, ex);
+                    _tracer.Error("Start of process '{0} {1}' failed. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, ex);
                 }
 
-                throw new BuildCsException("Process '{0} {1}' timed out.".F(process.StartInfo.FileName, process.StartInfo.Arguments));
+                if (!process.WaitForExit(args.Timeout.Milliseconds))
+                {
+                    try
+                    {
+                        process.Kill();
+                    }
+                    catch (Exception ex)
+                    {
+                        _tracer.Error("Could not kill process '{0} {1}' after '{1}' milliseconds. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, args.Timeout.Milliseconds, ex);
+                    }
+
+                    throw new BuildCsException("Process '{0} {1}' timed out.".F(process.StartInfo.FileName, process.StartInfo.Arguments));
+                }
             }
 
             return process.ExitCode;

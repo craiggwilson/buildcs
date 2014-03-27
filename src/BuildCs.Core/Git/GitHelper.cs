@@ -33,26 +33,28 @@ namespace BuildCs.Git
 
         public IEnumerable<string> Exec(BuildItem repositoryDir, string args, TimeSpan? timeout = null)
         {
-            var results = new List<string>();
-            var exitCode = _process.Exec(p =>
+            using (_tracer.StartTask("Git"))
             {
-                p.StartInfo.WorkingDirectory = repositoryDir;
-                p.StartInfo.FileName = GetExecutable();
-                p.StartInfo.Arguments = args;
-                if (timeout.HasValue)
-                    p.Timeout = timeout.Value;
-                p.OnErrorMessage = m => _tracer.Error(m);
-                p.OnOutputMessage = m =>
+                var results = new List<string>();
+                var exitCode = _process.Exec(p =>
                 {
-                    _tracer.Log(m);
-                    results.Add(m);
-                };
-            });
+                    p.StartInfo.WorkingDirectory = repositoryDir;
+                    p.StartInfo.FileName = GetExecutable();
+                    p.StartInfo.Arguments = args;
+                    if (timeout.HasValue)
+                        p.Timeout = timeout.Value;
+                    p.OnOutputMessage = m =>
+                    {
+                        _tracer.Trace(m);
+                        results.Add(m);
+                    };
+                });
 
-            if (exitCode != 0)
-                throw new BuildCsException("Git failed with exit code '{0}'.".F(exitCode));
+                if (exitCode != 0)
+                    throw new BuildCsException("Git failed with exit code '{0}'.".F(exitCode));
 
-            return results;
+                return results;
+            }
         }
 
         private string GetExecutable()

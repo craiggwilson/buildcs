@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace BuildCs.Tracing
 {
-    public enum BuildMessageType
+    public enum MessageLevel
     {
-        Log,
-        Info,
-        Important,
-        Success,
-        Error,
-        Fatal
+        Trace = 0,
+        Log = 1,
+        Info = 2,
+        Warning = 3,
+        Error = 4
     }
 }

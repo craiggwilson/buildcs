@@ -25,38 +25,51 @@ namespace BuildCs.Nuget
 
         public void Install(string packageId, Action<InstallPackageArgs> config)
         {
-            var args = new InstallPackageArgs();
-            if (config != null)
-                config(args);
+            using (_tracer.StartTask("Nuget - Install"))
+            {
+                var args = new InstallPackageArgs();
+                if (config != null)
+                    config(args);
 
-            ExecNuget(
-                GetExecutable(args.ToolPath),
-                "install {0} ".F(packageId) + GetArguments(args),
-                args.Timeout);
+                _tracer.Info("Installing '{0}'.", packageId);
+
+                ExecNuget(
+                    GetExecutable(args.ToolPath),
+                    "install {0} ".F(packageId) + GetArguments(args),
+                    args.Timeout);
+            }
         }
 
         public void Pack(BuildItem nuspecFile, Action<PackArgs> config)
         {
-            var args = new PackArgs();
-            if (config != null)
-                config(args);
+            using (_tracer.StartTask("Nuget - Pack"))
+            {
+                var args = new PackArgs();
+                if (config != null)
+                    config(args);
 
-            ExecNuget(
-                GetExecutable(args.ToolPath),
-                "pack \"{0}\" ".F(nuspecFile) + GetArguments(args),
-                args.Timeout);
+                _tracer.Info("Packing '{0}'.", nuspecFile);
+                ExecNuget(
+                    GetExecutable(args.ToolPath),
+                    "pack \"{0}\" ".F(nuspecFile) + GetArguments(args),
+                    args.Timeout);
+            }
         }
 
         public void Push(BuildItem nupkgFile, Action<PushArgs> config)
         {
-            var args = new PushArgs();
-            if (config != null)
-                config(args);
+            using (_tracer.StartTask("Nuget - Push"))
+            {
+                var args = new PushArgs();
+                if (config != null)
+                    config(args);
 
-            ExecNuget(
-                GetExecutable(args.ToolPath),
-                "push \"{0}\" ".F(nupkgFile) + GetArguments(args),
-                args.Timeout);
+                _tracer.Info("Pushing '{0}' to '{1}'.", nupkgFile, args.Source);
+                ExecNuget(
+                    GetExecutable(args.ToolPath),
+                    "push \"{0}\" ".F(nupkgFile) + GetArguments(args),
+                    args.Timeout);
+            }
         }
 
         public void RestorePackages()
@@ -67,14 +80,19 @@ namespace BuildCs.Nuget
 
         public void RestorePackage(BuildItem file, Action<RestorePackageArgs> config)
         {
-            var args = new RestorePackageArgs();
-            if (config != null)
-                config(args);
+            using (_tracer.StartTask("Nuget - Restore Package"))
+            {
+                var args = new RestorePackageArgs();
+                if (config != null)
+                    config(args);
 
-            ExecNuget(
-                GetExecutable(args.ToolPath), 
-                "restore \"{0}\" ".F(file) + GetArguments(args),
-                args.Timeout);
+                _tracer.Info("Restoring packages in '{0}'.", file);
+
+                ExecNuget(
+                    GetExecutable(args.ToolPath),
+                    "restore \"{0}\" ".F(file) + GetArguments(args),
+                    args.Timeout);
+            }
         }
 
         private void ExecNuget(string exe, string args, TimeSpan? timeout)
@@ -85,8 +103,6 @@ namespace BuildCs.Nuget
                 p.StartInfo.Arguments = args;
                 if (timeout.HasValue)
                     p.Timeout = timeout.Value;
-                p.OnErrorMessage = m => _tracer.Error(m);
-                p.OnOutputMessage = m => _tracer.Log(m);
             });
 
             if (exitCode != 0)

@@ -49,16 +49,18 @@ namespace BuildCs.MsBuild
 
         private void BuildProject(BuildItem project, MsBuildArgs args)
         {
-            var exitCode = _process.Exec(p =>
+            using (_tracer.StartTask("MsBuild"))
             {
-                p.StartInfo.FileName = GetExecutable(args.ToolPath);
-                p.StartInfo.Arguments = GetArguments(args) + " \"{0}\"".F(project);
-                p.OnErrorMessage = m => _tracer.Error(m);
-                p.OnOutputMessage = m => _tracer.Log(m);
-            });
+                _tracer.Info("Building '{0}'.", project);
+                var exitCode = _process.Exec(p =>
+                {
+                    p.StartInfo.FileName = GetExecutable(args.ToolPath);
+                    p.StartInfo.Arguments = GetArguments(args) + " \"{0}\"".F(project);
+                });
 
-            if (exitCode != 0)
-                throw new BuildCsException("MsBuild failed with exit code '{0}'.".F(exitCode));
+                if (exitCode != 0)
+                    throw new BuildCsException("MsBuild failed with exit code '{0}'.".F(exitCode));
+            }
         }
 
         private string GetArguments(MsBuildArgs config)

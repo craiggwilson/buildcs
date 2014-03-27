@@ -24,20 +24,23 @@ namespace BuildCs.NUnit
 
         public void Test(IEnumerable<BuildItem> assemblies, Action<NUnitArgs> config)
         {
-            var args = new NUnitArgs();
-            if (config != null)
-                config(args);
-
-            var exitCode = _process.Exec(p =>
+            using (_tracer.StartTask("Nunit"))
             {
-                p.StartInfo.FileName = GetExecutable(args.ToolPath);
-                p.StartInfo.Arguments = GetArguments(args) + " " + string.Join(" ", assemblies.Select(a => "\"{0}\"".F(a)));
-                p.OnErrorMessage = m => _tracer.Error(m);
-                p.OnOutputMessage = m => _tracer.Log(m);
-            });
+                var args = new NUnitArgs();
+                if (config != null)
+                    config(args);
 
-            if (exitCode != 0)
-                throw new BuildCsException("NUnit failed with exit code '{0}'.".F(exitCode));
+                _tracer.Info("Testing '{0}'.", string.Join(", ", assemblies));
+
+                var exitCode = _process.Exec(p =>
+                {
+                    p.StartInfo.FileName = GetExecutable(args.ToolPath);
+                    p.StartInfo.Arguments = GetArguments(args) + " " + string.Join(" ", assemblies.Select(a => "\"{0}\"".F(a)));
+                });
+
+                if (exitCode != 0)
+                    throw new BuildCsException("NUnit failed with exit code '{0}'.".F(exitCode));
+            }
         }
 
         private string GetArguments(NUnitArgs args)
