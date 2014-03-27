@@ -22,7 +22,7 @@ namespace BuildCs.Targetting
 
         public static void RunTargetOrDefault(this IBuild build, string defaultTarget)
         {
-            var targetNames = build.CommandLine().TargetNames;
+            var targetNames = build.Arguments().TargetNames;
             if (targetNames.Count == 0)
                 targetNames = new[] { defaultTarget };
 

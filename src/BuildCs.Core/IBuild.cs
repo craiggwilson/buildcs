@@ -11,6 +11,8 @@ namespace BuildCs
     /// </summary>
     public interface IBuild
     {
+        BuildContext Context { get; }
+
         T GetService<T>();
     }
 }

@@ -9,13 +9,20 @@ namespace ScriptCs.BuildCs
 {
     public class Build : IBuild, IScriptPackContext
     {
+        private readonly BuildContext _context;
         private readonly Dictionary<Type, object> _services;
 
-        public Build(IEnumerable<string> args)
+        public Build(BuildContext context)
         {
+            _context = context;
             _services = new Dictionary<Type, object>();
             _services.Add(typeof(Build), this);
-            _services.Add(typeof(CommandLineHelper), new CommandLineHelper(args));
+            _services.Add(typeof(BuildContext), _context);
+        }
+
+        public BuildContext Context
+        {
+            get { return _context; }
         }
 
         public T GetService<T>()

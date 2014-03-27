@@ -1,5 +1,6 @@
 var build = Require<Build>();
 
+
 var semVersion = "0.1.0";
 
 var baseDir = build.CurrentDirectory();
@@ -10,6 +11,8 @@ var binDir = artifactsDir + "bin";
 var assemblyInfoFile = srcDir + "GlobalAssemblyInfo.cs";
 var nuspecFiles = baseDir.Glob("*.nuspec");
 var slnFile = srcDir + "BuildCs.sln";
+
+build.Context.AddParameter(XmlBuildListener.OutputPathParameterName, artifactsDir + "build-results.xml");
 
 build.Target("Clean")
     .Do(() => 

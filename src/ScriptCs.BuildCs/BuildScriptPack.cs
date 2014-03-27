@@ -1,4 +1,6 @@
-﻿using ScriptCs.Contracts;
+﻿using BuildCs;
+using BuildCs.Tracing;
+using ScriptCs.Contracts;
 
 namespace ScriptCs.BuildCs
 {
@@ -27,7 +29,11 @@ namespace ScriptCs.BuildCs
             session.ImportNamespace("BuildCs.XUnit");
             session.ImportNamespace("BuildCs.Zip");
 
-            _build = new Build(session.ScriptArgs);
+            var context = new BuildContext(session.ScriptArgs);
+            if (context.Listeners.Count == 0)
+                context.AddListener(new ConsoleBuildListener(context));
+
+            _build = new Build(context);
         }
 
         public void Terminate()

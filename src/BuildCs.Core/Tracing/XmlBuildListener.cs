@@ -12,18 +12,19 @@ using System.Xml.Linq;
 
 namespace BuildCs.Tracing
 {
-    public class NantXmlBuildListener : IBuildListener
+    public class XmlBuildListener : IBuildListener
     {
+        public static readonly string OutputPathParameterName = "NantXmlBuildListener.filename";
+
+        private readonly BuildContext _context;
         private readonly Stack<Stopwatch> _stopwatchStack;
-        private readonly string _filename;
-        private readonly MessageLevel _threshold;
+        private StringBuilder _buffer;
         private XmlWriter _writer;
 
-        public NantXmlBuildListener(string filename, MessageLevel threshold)
+        public XmlBuildListener(BuildContext context)
         {
-            _filename = filename;
+            _context = context;
             _stopwatchStack = new Stack<Stopwatch>();
-            _threshold = threshold;
         }
 
         public void Handle(BuildEvent @event)
@@ -56,7 +57,7 @@ namespace BuildCs.Tracing
 
         private void Handle(MessageEvent @event)
         {
-            if(@event.Level >= _threshold && !string.IsNullOrWhiteSpace(@event.Message))
+            if(@event.Level >= _context.Verbosity && !string.IsNullOrWhiteSpace(@event.Message))
             {
                 _writer.WriteStartElement("message");
 
@@ -83,7 +84,8 @@ namespace BuildCs.Tracing
             {
                 Indent = true
             };
-            _writer = XmlWriter.Create(_filename, settings);
+            _buffer = new StringBuilder();
+            _writer = XmlWriter.Create(_buffer, settings);
             _writer.WriteStartElement("buildresults");
             _stopwatchStack.Push(Stopwatch.StartNew());
         }
@@ -96,6 +98,12 @@ namespace BuildCs.Tracing
             _writer.Close();
             _writer.Dispose();
             _writer = null;
+
+            string filename;
+            if (!_context.Parameters.TryGetValue(OutputPathParameterName, out filename))
+                filename = "build-output.xml";
+
+            File.WriteAllText(filename, _buffer.ToString());
         }
 
         private void Handle(StartTargetEvent @event)

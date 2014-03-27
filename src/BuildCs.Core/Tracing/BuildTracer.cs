@@ -1,26 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BuildCs.Tracing
 {
     public class BuildTracer
     {
-        private readonly List<IBuildListener> _listeners;
+        private readonly BuildContext _context;
 
-        public BuildTracer()
+        public BuildTracer(BuildContext context)
         {
-            _listeners = new List<IBuildListener>();
-            _listeners.Add(new ConsoleBuildListener());
-        }
-
-        public void AddListener(IBuildListener listener)
-        {
-            _listeners.Add(listener);
-        }
-
-        public void ClearListeners()
-        {
-            _listeners.Clear();
+            _context = context;
         }
 
         public IDisposable StartBuild(IEnumerable<string> targetNames)
@@ -75,7 +65,7 @@ namespace BuildCs.Tracing
 
         private void Publish(BuildEvent @event)
         {
-            _listeners.Each(x => x.Handle(@event));
+            _context.Listeners.Each(x => x.Handle(@event));
         }
 
         private class StartStop : IDisposable

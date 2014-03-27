@@ -7,11 +7,13 @@ namespace BuildCs.Tracing
 {
     public class ConsoleBuildListener : IBuildListener
     {
+        private readonly BuildContext _context;
         private readonly Stack<Context> _prefixes;
         private string _currentPrefix;
 
-        public ConsoleBuildListener()
+        public ConsoleBuildListener(BuildContext context)
         {
+            _context = context;
             _prefixes = new Stack<Context>();
         }
 
@@ -39,6 +41,9 @@ namespace BuildCs.Tracing
             }
 
             var message = (MessageEvent)@event;
+
+            if (_context.Verbosity > message.Level)
+                return;
 
             var color = ConsoleColor.DarkGray;
             switch (message.Level)
