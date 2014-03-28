@@ -3,9 +3,9 @@ namespace BuildCs.Tracing
 {
     public static partial class Extensions
     {
-        public static BuildTracer Tracer(this IBuild build)
+        public static Tracer Tracer(this IBuild build)
         {
-            return build.GetService<BuildTracer>();
+            return build.GetService<Tracer>();
         }
 
         public static void Log(this IBuild build, string message)

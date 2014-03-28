@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BuildCs.Targetting
 {
-    public enum BuildTargetStatus
+    public enum TargetExecutionStatus
     {
-        NotRun,
+        NotRun = 0,
         Skipped,
-        Failed,
-        Success
+        Success,
+        Failed
     }
 }

@@ -4,40 +4,40 @@ using System.Linq;
 
 namespace BuildCs.Targetting
 {
-    public class BuildTargetManager
+    public class TargetManager
     {
-        private readonly Dictionary<string, IBuildTargetBuilder> _targets;
+        private readonly Dictionary<string, ITargetBuilder> _targets;
 
-        public BuildTargetManager()
+        public TargetManager()
         {
-            _targets = new Dictionary<string, IBuildTargetBuilder>(StringComparer.InvariantCultureIgnoreCase);
+            _targets = new Dictionary<string, ITargetBuilder>(StringComparer.InvariantCultureIgnoreCase);
         }
 
-        public IReadOnlyCollection<IBuildTargetBuilder> Targets
+        public IReadOnlyCollection<ITargetBuilder> Targets
         {
             get { return _targets.Values.ToList(); }
         }
 
-        public IBuildTargetBuilder AddTarget(string name)
+        public ITargetBuilder AddTarget(string name)
         {
             if(_targets.ContainsKey(name))
                 throw new BuildCsException("The target '{0}' has already been defined.".F(name));
 
-            var target = new BuildTarget(name);
+            var target = new Target(name);
             _targets.Add(name, target);
             return target;
         }
 
-        public IBuildTargetBuilder GetTarget(string name)
+        public ITargetBuilder GetTarget(string name)
         {
-            IBuildTargetBuilder target;
+            ITargetBuilder target;
             if (!_targets.TryGetValue(name, out target))
                 throw new BuildCsException("The target '{0}' does not exist.".F(name));
 
             return target;
         }
 
-        public IEnumerable<IBuildTarget> GetBuildChain(IEnumerable<string> targetNames)
+        public IEnumerable<ITarget> GetBuildChain(IEnumerable<string> targetNames)
         {
             HashSet<string> targets = new HashSet<string>();
             targetNames.Each(t => GatherBuildTargets(t, targets));
@@ -85,7 +85,7 @@ namespace BuildCs.Targetting
 
         private void GatherBuildTargets(string targetName, ISet<string> resolved)
         {
-            IBuildTargetBuilder target;
+            ITargetBuilder target;
             if (!_targets.TryGetValue(targetName, out target))
                 throw new BuildCsException("Target '{0}' has not been defined.".F(targetName));
 
@@ -97,8 +97,8 @@ namespace BuildCs.Targetting
 
         private class Node
         {
-            public IBuildTargetBuilder Target;
-            public List<IBuildTargetBuilder> RequiredBy;
+            public ITargetBuilder Target;
+            public List<ITargetBuilder> RequiredBy;
         }
     }
 }

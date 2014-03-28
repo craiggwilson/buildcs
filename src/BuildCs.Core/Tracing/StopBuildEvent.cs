@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BuildCs.Targetting;
 
 namespace BuildCs.Tracing
 {
     public class StopBuildEvent : BuildEvent
     {
-        public StopBuildEvent(IEnumerable<string> targetNames)
+        public StopBuildEvent(BuildExecution build)
         {
-            TargetNames = targetNames.ToList();
+            Build = build;
         }
 
-        public IEnumerable<string> TargetNames { get; private set; }
+        public BuildExecution Build { get; private set; }
 
         public override BuildEventType Type
         {

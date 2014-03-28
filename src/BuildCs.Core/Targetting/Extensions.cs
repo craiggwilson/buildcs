@@ -5,14 +5,14 @@ namespace BuildCs.Targetting
 {
     public static class Extensions
     {
-        public static BuildTargetManager TargetManager(this IBuild build)
+        public static TargetManager TargetManager(this IBuild build)
         {
-            return build.GetService<BuildTargetManager>();
+            return build.GetService<TargetManager>();
         }
 
-        public static BuildTargetRunner TargetRunner(this IBuild build)
+        public static TargetRunner TargetRunner(this IBuild build)
         {
-            return build.GetService<BuildTargetRunner>();
+            return build.GetService<TargetRunner>();
         }
 
         public static void Run(this IBuild build, params string[] targets)
@@ -29,12 +29,12 @@ namespace BuildCs.Targetting
             Run(build, targetNames.ToArray());
         }
 
-        public static IBuildTargetBuilder Target(this IBuild build, string name)
+        public static ITargetBuilder Target(this IBuild build, string name)
         {
             return build.TargetManager().AddTarget(name);
         }
 
-        public static IBuildTargetBuilder After(this IBuildTargetBuilder builder, Action after)
+        public static ITargetBuilder After(this ITargetBuilder builder, Action after)
         {
             return builder.Wrap(next =>
             {
@@ -43,7 +43,7 @@ namespace BuildCs.Targetting
             });
         }
 
-        public static IBuildTargetBuilder Before(this IBuildTargetBuilder builder, Action before)
+        public static ITargetBuilder Before(this ITargetBuilder builder, Action before)
         {
             return builder.Wrap(next =>
             {
@@ -52,7 +52,7 @@ namespace BuildCs.Targetting
             });
         }
 
-        public static IBuildTargetBuilder Cleanup(this IBuildTargetBuilder builder, Action cleanup)
+        public static ITargetBuilder Cleanup(this ITargetBuilder builder, Action cleanup)
         {
             return builder.Wrap(next =>
             {
@@ -67,7 +67,7 @@ namespace BuildCs.Targetting
             });
         }
 
-        public static IBuildTargetBuilder FailIf(this IBuildTargetBuilder builder, Func<bool> predicate, string message = null)
+        public static ITargetBuilder FailIf(this ITargetBuilder builder, Func<bool> predicate, string message = null)
         {
             return builder.Wrap(next =>
             {
@@ -77,7 +77,7 @@ namespace BuildCs.Targetting
             });
         }
 
-        public static IBuildTargetBuilder SkipIf(this IBuildTargetBuilder builder, Func<bool> predicate, string message = null)
+        public static ITargetBuilder SkipIf(this ITargetBuilder builder, Func<bool> predicate, string message = null)
         {
             return builder.Wrap(next =>
             {

@@ -5,16 +5,13 @@ using System.Linq;
 
 namespace BuildCs.Tracing
 {
-    public class ConsoleBuildListener : IBuildListener
+    public class ConsoleListener : IBuildListener
     {
-        private readonly BuildContext _context;
-        private readonly Stack<Context> _prefixes;
         private string _currentPrefix;
 
-        public ConsoleBuildListener(BuildContext context)
+        public ConsoleListener()
         {
-            _context = context;
-            _prefixes = new Stack<Context>();
+            _currentPrefix = "";
         }
 
         public void Handle(BuildEvent @event)
@@ -22,16 +19,14 @@ namespace BuildCs.Tracing
             switch(@event.Type)
             {
                 case BuildEventType.StartTarget:
-                    var name = ((StartTargetEvent)@event).Name;
-                    _prefixes.Push(new Context { Name = name, Stopwatch = Stopwatch.StartNew() });
-                    _currentPrefix = string.Join("", _prefixes.Reverse().Select(x => "[{0}] ".F(x.Name)));
+                    var name = ((StartTargetEvent)@event).Target.Name;
+                    _currentPrefix = "[{0}] ".F(name);
                     Write(ConsoleColor.Green, "Starting at {0:HH:mm:ss}".F(DateTime.UtcNow));
                     return;
                 case BuildEventType.StopTarget:
-                    var stopped = _prefixes.Pop();
-                    stopped.Stopwatch.Stop();
-                    Write(ConsoleColor.Green, "Finished in {0}".F(stopped.Stopwatch.Elapsed));
-                    _currentPrefix = string.Join("", _prefixes.Reverse().Select(x => "[{0}] ".F(x.Name)));
+                    var duration = ((StopTargetEvent)@event).Target.Duration;
+                    Write(ConsoleColor.Green, "Finished in {0}".F(duration));
+                    _currentPrefix = "";
                     return;
                 case BuildEventType.StartTask:
                 case BuildEventType.StopTask:
@@ -41,9 +36,6 @@ namespace BuildCs.Tracing
             }
 
             var message = (MessageEvent)@event;
-
-            if (_context.Verbosity > message.Level)
-                return;
 
             var color = ConsoleColor.DarkGray;
             switch (message.Level)
@@ -71,12 +63,6 @@ namespace BuildCs.Tracing
             Console.ForegroundColor = color;
             Console.WriteLine(_currentPrefix + message);
             Console.ForegroundColor = oldColor;
-        }
-
-        private class Context
-        {
-            public string Name;
-            public Stopwatch Stopwatch;
         }
     }
 }

@@ -12,7 +12,7 @@ var assemblyInfoFile = srcDir + "GlobalAssemblyInfo.cs";
 var nuspecFiles = baseDir.Glob("*.nuspec");
 var slnFile = srcDir + "BuildCs.sln";
 
-build.Context.AddParameter(XmlBuildListener.OutputPathParameterName, artifactsDir + "build-results.xml");
+build.Context.AddParameter(XmlListener.OutputPathParameterName, artifactsDir + "build-results.xml");
 
 build.Target("Clean")
     .Do(() => 

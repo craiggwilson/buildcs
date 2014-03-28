@@ -13,9 +13,9 @@ namespace BuildCs.NUnit
     {
         private readonly FileSystemHelper _fileSystem;
         private readonly ProcessHelper _process;
-        private readonly BuildTracer _tracer;
+        private readonly Tracer _tracer;
 
-        public NUnitHelper(BuildTracer tracer, FileSystemHelper fileSystem, ProcessHelper process)
+        public NUnitHelper(Tracer tracer, FileSystemHelper fileSystem, ProcessHelper process)
         {
             _fileSystem = fileSystem;
             _process = process;

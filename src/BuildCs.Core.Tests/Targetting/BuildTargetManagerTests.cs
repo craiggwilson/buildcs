@@ -6,11 +6,11 @@ namespace BuildCs.Targetting
 {
     public class BuildTargetManagerTests
     {
-        private readonly BuildTargetManager _subject;
+        private readonly TargetManager _subject;
 
         public BuildTargetManagerTests()
         {
-            _subject = new BuildTargetManager();
+            _subject = new TargetManager();
             _subject.AddTarget("7").DependsOn("11", "8");
             _subject.AddTarget("5").DependsOn("11");
             _subject.AddTarget("3").DependsOn("8", "10");

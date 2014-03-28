@@ -6,12 +6,12 @@ using BuildCs.Tracing;
 
 namespace BuildCs.Targetting
 {
-    public class BuildTargetRunner
+    public class TargetRunner
     {
-        private readonly BuildTargetManager _targetManager;
-        private readonly BuildTracer _tracer;
+        private readonly TargetManager _targetManager;
+        private readonly Tracer _tracer;
 
-        public BuildTargetRunner(BuildTargetManager targetManager, BuildTracer tracer)
+        public TargetRunner(TargetManager targetManager, Tracer tracer)
         {
             _targetManager = targetManager;
             _tracer = tracer;
@@ -21,58 +21,59 @@ namespace BuildCs.Targetting
         {
             var chain = _targetManager
                 .GetBuildChain(requestedTargets)
-                .Select(x => new BuildTargetRunContext(x))
+                .Select(x => new TargetExecution(x))
                 .ToList();
 
-            var names = string.Join(", ", chain.Select(x => x.Target.Name));
-            using (_tracer.StartBuild(chain.Select(x => x.Target.Name)))
+            var build = new BuildExecution(chain);
+
+            using (_tracer.StartBuild(build))
             {
-                foreach (var context in chain)
+                foreach (var target in chain)
                 {
-                    Run(context);
-                    if (context.Status == BuildTargetStatus.Failed)
+                    Run(build, target);
+                    if (target.Status == TargetExecutionStatus.Failed)
                         break;
                 }
                 WriteSummary(chain);
             }
         }
 
-        private void Run(BuildTargetRunContext context)
+        private void Run(BuildExecution build, TargetExecution target)
         {
-            using (_tracer.StartTarget(context.Target.Name))
+            using (_tracer.StartTarget(build, target))
             {
                 var stopwatch = Stopwatch.StartNew();
                 try
                 {
-                    context.Target.Run();
+                    target.Target.Run();
                     stopwatch.Stop();
-                    context.MarkSuccessful(stopwatch.Elapsed);
+                    target.MarkSuccessful(stopwatch.Elapsed);
                 }
                 catch(BuildCsFailTargetException ex)
                 {
                     stopwatch.Stop();
-                    context.MarkFailed(stopwatch.Elapsed, ex);
+                    target.MarkFailed(stopwatch.Elapsed, ex);
                     _tracer.Error("Failed. {0}", ex.Message);
                 }
                 catch(BuildCsSkipTargetException ex)
                 {
                     stopwatch.Stop();
-                    context.MarkSkipped();
+                    target.MarkSkipped(stopwatch.Elapsed);
                     _tracer.Info("Skipped. {0}", ex.Message);
                 }
                 catch (Exception ex)
                 {
                     stopwatch.Stop();
-                    context.MarkFailed(stopwatch.Elapsed, ex);
+                    target.MarkFailed(stopwatch.Elapsed, ex);
                     _tracer.Error("Failed. {0}", ex);
                 }
             }
         }
 
-        private void WriteSummary(IEnumerable<BuildTargetRunContext> chain)
+        private void WriteSummary(IEnumerable<TargetExecution> chain)
         {
             var maxLength = chain.Max(x => x.Target.Name.Length);
-            var anyFailed = chain.Any(x => x.Status == BuildTargetStatus.Failed);
+            var anyFailed = chain.Any(x => x.Status == TargetExecutionStatus.Failed);
             var type = MessageLevel.Info;
             if (anyFailed)
                 type = MessageLevel.Error;
@@ -88,16 +89,16 @@ namespace BuildCs.Targetting
                 var text = context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString();
                 switch(context.Status)
                 {
-                    case BuildTargetStatus.Failed:
+                    case TargetExecutionStatus.Failed:
                         _tracer.Error(context.Target.Name.PadRight(maxLength + 4) + "Failed");
                         break;
-                    case BuildTargetStatus.NotRun:
+                    case TargetExecutionStatus.NotRun:
                         _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Not Run");
                         break;
-                    case BuildTargetStatus.Skipped:
+                    case TargetExecutionStatus.Skipped:
                         _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Skipped");
                         break;
-                    case BuildTargetStatus.Success:
+                    case TargetExecutionStatus.Success:
                         _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString());
                         break;
                 }

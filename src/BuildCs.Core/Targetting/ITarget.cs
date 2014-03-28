@@ -2,7 +2,7 @@
 
 namespace BuildCs.Targetting
 {
-    public interface IBuildTarget
+    public interface ITarget
     {
         string Description { get; }
 

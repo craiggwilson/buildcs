@@ -12,9 +12,9 @@ namespace BuildCs.AssemblyInfo
     public class AssemblyInfoHelper
     {
         private readonly FileSystemHelper _fileSystem;
-        private readonly BuildTracer _tracer;
+        private readonly Tracer _tracer;
 
-        public AssemblyInfoHelper(BuildTracer tracer, FileSystemHelper fileSystem)
+        public AssemblyInfoHelper(Tracer tracer, FileSystemHelper fileSystem)
         {
             _fileSystem = fileSystem;
             _tracer = tracer;

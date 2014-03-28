@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BuildCs.Targetting;
 
 namespace BuildCs.Tracing
 {
-    public class BuildTracer
+    public class Tracer
     {
         private readonly BuildContext _context;
 
-        public BuildTracer(BuildContext context)
+        public Tracer(BuildContext context)
         {
             _context = context;
         }
 
-        public IDisposable StartBuild(IEnumerable<string> targetNames)
+        public IDisposable StartBuild(BuildExecution build)
         {
-            Publish(new StartBuildEvent(targetNames));
-            return new StartStop(this, new StopBuildEvent(targetNames));
+            Publish(new StartBuildEvent(build));
+            return new StartStop(this, new StopBuildEvent(build));
         }
 
-        public IDisposable StartTarget(string name)
+        public IDisposable StartTarget(BuildExecution build, TargetExecution target)
         {
-            Publish(new StartTargetEvent(name));
-            return new StartStop(this, new StopTargetEvent(name));
+            Publish(new StartTargetEvent(build, target));
+            return new StartStop(this, new StopTargetEvent(build, target));
         }
 
         public IDisposable StartTask(string name)
@@ -58,6 +59,9 @@ namespace BuildCs.Tracing
 
         public void Write(MessageLevel type, string message, params object[] args)
         {
+            if (_context.Verbosity > type)
+                return;
+
             if (args != null && args.Length > 0)
                 message = string.Format(message, args);
             Publish(new MessageEvent(type, message));
@@ -71,9 +75,9 @@ namespace BuildCs.Tracing
         private class StartStop : IDisposable
         {
             private readonly BuildEvent _event;
-            private readonly BuildTracer _tracer;
+            private readonly Tracer _tracer;
 
-            public StartStop(BuildTracer tracer, BuildEvent @event)
+            public StartStop(Tracer tracer, BuildEvent @event)
             {
                 _tracer = tracer;
                 _event = @event;

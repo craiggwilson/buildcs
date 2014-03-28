@@ -7,12 +7,12 @@ namespace BuildCs.Processes
     public class ProcessHelper
     {
         private readonly EnvironmentHelper _environment;
-        private readonly BuildTracer _tracer;
+        private readonly Tracer _tracer;
 
         private string _monoPath;
         private string _monoArgs;
 
-        public ProcessHelper(BuildTracer tracer, EnvironmentHelper environment)
+        public ProcessHelper(Tracer tracer, EnvironmentHelper environment)
         {
             _environment = environment;
             _tracer = tracer;

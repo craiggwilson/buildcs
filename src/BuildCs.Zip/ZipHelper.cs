@@ -11,9 +11,9 @@ namespace BuildCs.Zip
 {
     public class ZipHelper
     {
-        private BuildTracer _tracer;
+        private Tracer _tracer;
 
-        public ZipHelper(BuildTracer tracer)
+        public ZipHelper(Tracer tracer)
         {
             _tracer = tracer;
         }

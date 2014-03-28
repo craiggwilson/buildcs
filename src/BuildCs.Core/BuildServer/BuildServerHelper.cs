@@ -10,9 +10,9 @@ namespace BuildCs.BuildServer
     public class BuildServerHelper
     {
         private readonly EnvironmentHelper _environment;
-        private readonly BuildTracer _tracer;
+        private readonly Tracer _tracer;
 
-        public BuildServerHelper(EnvironmentHelper environment, BuildTracer tracer)
+        public BuildServerHelper(EnvironmentHelper environment, Tracer tracer)
         {
             _environment = environment;
             _tracer = tracer;

@@ -15,9 +15,9 @@ namespace BuildCs.MsBuild
         private readonly EnvironmentHelper _environment;
         private readonly FileSystemHelper _fileSystem;
         private readonly ProcessHelper _process;
-        private readonly BuildTracer _tracer;
+        private readonly Tracer _tracer;
 
-        public MsBuildHelper(BuildTracer tracer, EnvironmentHelper environment, FileSystemHelper fileSystem, ProcessHelper process)
+        public MsBuildHelper(Tracer tracer, EnvironmentHelper environment, FileSystemHelper fileSystem, ProcessHelper process)
         {
             _environment = environment;
             _fileSystem = fileSystem;

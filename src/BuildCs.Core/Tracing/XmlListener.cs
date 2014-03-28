@@ -12,16 +12,16 @@ using System.Xml.Linq;
 
 namespace BuildCs.Tracing
 {
-    public class XmlBuildListener : IBuildListener
+    public class XmlListener : IBuildListener
     {
-        public static readonly string OutputPathParameterName = "NantXmlBuildListener.filename";
+        public static readonly string OutputPathParameterName = "XmlListener.filename";
 
         private readonly BuildContext _context;
         private readonly Stack<Stopwatch> _stopwatchStack;
         private StringBuilder _buffer;
         private XmlWriter _writer;
 
-        public XmlBuildListener(BuildContext context)
+        public XmlListener(BuildContext context)
         {
             _context = context;
             _stopwatchStack = new Stack<Stopwatch>();
@@ -57,7 +57,7 @@ namespace BuildCs.Tracing
 
         private void Handle(MessageEvent @event)
         {
-            if(@event.Level >= _context.Verbosity && !string.IsNullOrWhiteSpace(@event.Message))
+            if(!string.IsNullOrWhiteSpace(@event.Message))
             {
                 _writer.WriteStartElement("message");
 
@@ -109,7 +109,7 @@ namespace BuildCs.Tracing
         private void Handle(StartTargetEvent @event)
         {
             _writer.WriteStartElement("target");
-            _writer.WriteAttributeString("name", @event.Name);
+            _writer.WriteAttributeString("name", @event.Target.Name);
             _writer.Flush();
             _stopwatchStack.Push(Stopwatch.StartNew());
         }

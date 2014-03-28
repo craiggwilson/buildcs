@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BuildCs.Targetting
 {
-    public class BuildTarget : IBuildTargetBuilder
+    public class Target : ITargetBuilder
     {
         private readonly string _name;
         private readonly List<Action<Action>> _wrappers;
@@ -13,7 +13,7 @@ namespace BuildCs.Targetting
         private string _description;
         private List<string> _dependencies;
 
-        public BuildTarget(string name)
+        public Target(string name)
         {
             _name = name;
             _action = () => { };
@@ -36,25 +36,25 @@ namespace BuildCs.Targetting
             get { return _dependencies; }
         }
 
-        public IBuildTargetBuilder Describe(string description)
+        public ITargetBuilder Describe(string description)
         {
             _description = description;
             return this;
         }
 
-        public IBuildTargetBuilder DependsOn(params string[] names)
+        public ITargetBuilder DependsOn(params string[] names)
         {
             _dependencies.AddRange(names);
             return this;
         }
 
-        public IBuildTargetBuilder Do(Action action)
+        public ITargetBuilder Do(Action action)
         {
             _action = action;
             return this;
         }
 
-        public IBuildTargetBuilder Wrap(Action<Action> action)
+        public ITargetBuilder Wrap(Action<Action> action)
         {
             _wrappers.Add(action);
             return this;

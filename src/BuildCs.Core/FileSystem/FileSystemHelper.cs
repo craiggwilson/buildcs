@@ -11,9 +11,9 @@ namespace BuildCs.FileSystem
     public class FileSystemHelper
     {
         private readonly EnvironmentHelper _environment;
-        private readonly BuildTracer _tracer;
+        private readonly Tracer _tracer;
 
-        public FileSystemHelper(EnvironmentHelper environment, BuildTracer tracer)
+        public FileSystemHelper(EnvironmentHelper environment, Tracer tracer)
         {
             _environment = environment;
             _tracer = tracer;
