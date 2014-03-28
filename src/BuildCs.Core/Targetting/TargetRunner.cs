@@ -34,7 +34,6 @@ namespace BuildCs.Targetting
                     if (target.Status == TargetExecutionStatus.Failed)
                         break;
                 }
-                WriteSummary(chain);
             }
         }
 
@@ -68,47 +67,6 @@ namespace BuildCs.Targetting
                     _tracer.Error("Failed. {0}", ex);
                 }
             }
-        }
-
-        private void WriteSummary(IEnumerable<TargetExecution> chain)
-        {
-            var maxLength = chain.Max(x => x.Target.Name.Length);
-            var anyFailed = chain.Any(x => x.Status == TargetExecutionStatus.Failed);
-            var type = MessageLevel.Info;
-            if (anyFailed)
-                type = MessageLevel.Error;
-
-            _tracer.Write(type, "");
-            _tracer.Write(type, "---------------------------------------------------------------------");
-            _tracer.Write(type, "Build Time Report");
-            _tracer.Write(type, "---------------------------------------------------------------------");
-            _tracer.Write(type, "Target".PadRight(maxLength) + "    Duration");
-            _tracer.Write(type, "------".PadRight(maxLength) + "    --------");
-            foreach(var context in chain)
-            {
-                var text = context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString();
-                switch(context.Status)
-                {
-                    case TargetExecutionStatus.Failed:
-                        _tracer.Error(context.Target.Name.PadRight(maxLength + 4) + "Failed");
-                        break;
-                    case TargetExecutionStatus.NotRun:
-                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Not Run");
-                        break;
-                    case TargetExecutionStatus.Skipped:
-                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + "Skipped");
-                        break;
-                    case TargetExecutionStatus.Success:
-                        _tracer.Info(context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString());
-                        break;
-                }
-            }
-            _tracer.Write(type, "------".PadRight(maxLength) + "    --------");
-            var status = anyFailed
-                ? "Failed"
-                : "Ok";
-            _tracer.Write(type, "Result".PadRight(maxLength + 4) + status);
-            _tracer.Write(type, "---------------------------------------------------------------------");
         }
     }
 }

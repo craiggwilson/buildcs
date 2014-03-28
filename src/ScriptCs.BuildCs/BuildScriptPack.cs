@@ -31,7 +31,7 @@ namespace ScriptCs.BuildCs
 
             var context = new BuildContext(session.ScriptArgs);
             if (context.Listeners.Count == 0)
-                context.AddListener(new ConsoleListener());
+                context.AddListener(new ConsoleListener(context));
 
             _build = new Build(context);
         }
