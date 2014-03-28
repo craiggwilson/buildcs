@@ -10,14 +10,14 @@ namespace BuildCs.AssemblyInfo
 {
     public static class Extensions
     {
-        public static AssemblyInfoHelper AssemblyInfoHelper(this IBuild build)
+        public static AssemblyInfoHelper AssemblyInfoHelper(this IBuildSession session)
         {
-            return build.GetService<AssemblyInfoHelper>();
+            return session.GetService<AssemblyInfoHelper>();
         }
 
-        public static void GenerateCSharpAssemblyInfo(this IBuild build, BuildItem outputPath, Action<GenerateArgs> config)
+        public static void GenerateCSharpAssemblyInfo(this IBuildSession session, BuildItem outputPath, Action<GenerateArgs> config)
         {
-            AssemblyInfoHelper(build).GenerateCSharp(outputPath, config);
+            AssemblyInfoHelper(session).GenerateCSharp(outputPath, config);
         }
     }
 }

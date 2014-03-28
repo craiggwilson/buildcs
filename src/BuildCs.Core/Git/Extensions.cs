@@ -9,14 +9,14 @@ namespace BuildCs.Git
 {
     public static class Extensions
     {
-        public static GitHelper GitHelper(this IBuild build)
+        public static GitHelper GitHelper(this IBuildSession session)
         {
-            return build.GetService<GitHelper>();
+            return session.GetService<GitHelper>();
         }
 
-        public static IEnumerable<string> GitExec(this IBuild build, BuildItem repositoryDir, string args, TimeSpan? timeout = null)
+        public static IEnumerable<string> GitExec(this IBuildSession session, BuildItem repositoryDir, string args, TimeSpan? timeout = null)
         {
-            return GitHelper(build).Exec(repositoryDir, args, timeout);
+            return GitHelper(session).Exec(repositoryDir, args, timeout);
         }
     }
 }

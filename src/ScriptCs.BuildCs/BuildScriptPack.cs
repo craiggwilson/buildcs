@@ -29,11 +29,11 @@ namespace ScriptCs.BuildCs
             session.ImportNamespace("BuildCs.XUnit");
             session.ImportNamespace("BuildCs.Zip");
 
-            var context = new BuildContext(session.ScriptArgs);
-            if (context.Listeners.Count == 0)
-                context.AddListener(new ConsoleListener(context));
+            var arguments = new Arguments(session.ScriptArgs);
+            if (arguments.Listeners.Count == 0)
+                arguments.AddListener(typeof(ConsoleListener).FullName);
 
-            _build = new Build(context);
+            _build = new Build(new BuildSessionFactory().Create(arguments));
         }
 
         public void Terminate()

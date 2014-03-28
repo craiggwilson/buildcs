@@ -9,39 +9,39 @@ namespace BuildCs.Nuget
 {
     public static class Extensions
     {
-        public static NugetHelper NugetHelper(this IBuild build)
+        public static NugetHelper NugetHelper(this IBuildSession session)
         {
-            return build.GetService<NugetHelper>();
+            return session.GetService<NugetHelper>();
         }
 
-        public static void NugetInstall(this IBuild build, string packageId, Action<InstallPackageArgs> config)
+        public static void NugetInstall(this IBuildSession session, string packageId, Action<InstallPackageArgs> config)
         {
-            NugetHelper(build).Install(packageId, config);
+            NugetHelper(session).Install(packageId, config);
         }
 
-        public static void NugetPack(this IBuild build, BuildItem nuspecFile, Action<PackArgs> config)
+        public static void NugetPack(this IBuildSession session, BuildItem nuspecFile, Action<PackArgs> config)
         {
-            NugetPack(build, new BuildItem[] { nuspecFile }, config);
+            NugetPack(session, new BuildItem[] { nuspecFile }, config);
         }
 
-        public static void NugetPack(this IBuild build, IEnumerable<BuildItem> nuspecFiles, Action<PackArgs> config)
+        public static void NugetPack(this IBuildSession session, IEnumerable<BuildItem> nuspecFiles, Action<PackArgs> config)
         {
-            nuspecFiles.Each(nuspecFile => NugetHelper(build).Pack(nuspecFile, config));
+            nuspecFiles.Each(nuspecFile => NugetHelper(session).Pack(nuspecFile, config));
         }
 
-        public static void NugetPush(this IBuild build, BuildItem nupkgFile, Action<PushArgs> config)
+        public static void NugetPush(this IBuildSession session, BuildItem nupkgFile, Action<PushArgs> config)
         {
-            NugetPush(build, new BuildItem[] { nupkgFile }, config);
+            NugetPush(session, new BuildItem[] { nupkgFile }, config);
         }
 
-        public static void NugetPush(this IBuild build, IEnumerable<BuildItem> nupkgFiles, Action<PushArgs> config)
+        public static void NugetPush(this IBuildSession session, IEnumerable<BuildItem> nupkgFiles, Action<PushArgs> config)
         {
-            nupkgFiles.Each(nupkgFile => NugetHelper(build).Push(nupkgFile, config));
+            nupkgFiles.Each(nupkgFile => NugetHelper(session).Push(nupkgFile, config));
         }
 
-        public static void NugetRestorePackages(this IBuild build)
+        public static void NugetRestorePackages(this IBuildSession session)
         {
-            NugetHelper(build).RestorePackages();
+            NugetHelper(session).RestorePackages();
         }
     }
 }

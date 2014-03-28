@@ -9,19 +9,19 @@ namespace BuildCs.XUnit
 {
     public static class Extensions
     {
-        public static XUnitHelper XUnitHelper(this IBuild build)
+        public static XUnitHelper XUnitHelper(this IBuildSession session)
         {
-            return build.GetService<XUnitHelper>();
+            return session.GetService<XUnitHelper>();
         }
 
-        public static void XUnit(this IBuild build, BuildItem assembly, Action<XUnitArgs> config = null)
+        public static void XUnit(this IBuildSession session, BuildItem assembly, Action<XUnitArgs> config = null)
         {
-            XUnit(build, new[] { assembly }, config);
+            XUnit(session, new[] { assembly }, config);
         }
 
-        public static void XUnit(this IBuild build, IEnumerable<BuildItem> assemblies, Action<XUnitArgs> config = null)
+        public static void XUnit(this IBuildSession session, IEnumerable<BuildItem> assemblies, Action<XUnitArgs> config = null)
         {
-            XUnitHelper(build).Test(assemblies, config);
+            XUnitHelper(session).Test(assemblies, config);
         }
     }
 }

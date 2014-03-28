@@ -15,12 +15,16 @@ namespace BuildCs.Targetting
         {
             _targetManager = targetManager;
             _tracer = tracer;
+
+            TargetsToRun = new List<string>();
         }
 
-        public void RunTargets(IEnumerable<string> requestedTargets)
+        public IList<string> TargetsToRun { get; private set; }
+
+        public void Run()
         {
             var chain = _targetManager
-                .GetBuildChain(requestedTargets)
+                .GetBuildChain(TargetsToRun)
                 .Select(x => new TargetExecution(x))
                 .ToList();
 

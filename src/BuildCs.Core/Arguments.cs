@@ -6,21 +6,21 @@ using BuildCs.Tracing;
 
 namespace BuildCs
 {
-    public class BuildContext
+    public class Arguments
     {
-        private readonly List<IBuildListener> _listeners;
+        private readonly List<string> _listeners;
         private readonly Dictionary<string, string> _parameters;
         private readonly List<string> _targetNames;
 
-        public BuildContext(IEnumerable<string> args)
+        public Arguments(IEnumerable<string> args)
         {
-            _listeners = new List<IBuildListener>();
+            _listeners = new List<string>();
             _parameters = new Dictionary<string, string>();
             _targetNames = new List<string>();
             ParseArguments(args);
         }
 
-        public IReadOnlyList<IBuildListener> Listeners
+        public IReadOnlyList<string> Listeners
         {
             get { return _listeners; }
         }
@@ -37,7 +37,7 @@ namespace BuildCs
 
         public MessageLevel Verbosity { get; set; }
 
-        public void AddListener(IBuildListener listener)
+        public void AddListener(string listener)
         {
             _listeners.Add(listener);
         }
@@ -56,7 +56,6 @@ namespace BuildCs
         {
             _targetNames.AddRange(args.TakeWhile(s => !s.StartsWith("-")));
             var arguments = new Queue<string>(args.SkipWhile(s => !s.StartsWith("-")));
-            
 
             while(arguments.Count > 0)
             {
@@ -89,15 +88,7 @@ namespace BuildCs
                         break;
                     case "listener":
                         value = argument.Substring(endTypeIndex + 1);
-                        var listenerType = Type.GetType(value, false, true);
-                        if (listenerType == null)
-                        {
-                            listenerType = Type.GetType("BuildCs.Tracing." + value, false, true);
-                            if(listenerType == null)
-                                throw new BuildCsException("Listener of type '{0}' could not be found.".F(value));
-                        }
-
-                        _listeners.Add((IBuildListener)Activator.CreateInstance(listenerType, new object[] { this }));
+                        _listeners.Add(value);
                         break;
                     default:
                         throw new BuildCsException("Unknown argument type: {0}".F(type));

@@ -58,7 +58,8 @@
     <Compile Include="FileSystem\FileSystemHelper.cs" />
     <Compile Include="Git\Extensions.cs" />
     <Compile Include="Git\GitHelper.cs" />
-    <Compile Include="IBuild.cs" />
+    <Compile Include="IBuildSession.cs" />
+    <Compile Include="BuildSessionFactory.cs" />
     <Compile Include="MsBuild\Extensions.cs" />
     <Compile Include="MsBuild\MsBuildArgs.cs" />
     <Compile Include="MsBuild\MsBuildHelper.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="NUnit\NUnitArgs.cs" />
     <Compile Include="Processes\Extensions.cs" />
     <Compile Include="BuildCsException.cs" />
-    <Compile Include="BuildContext.cs" />
+    <Compile Include="Arguments.cs" />
     <Compile Include="EnvironmentHelper.cs" />
     <Compile Include="Targetting\BuildExecution.cs" />
     <Compile Include="Targetting\BuildCsFailTargetException.cs" />

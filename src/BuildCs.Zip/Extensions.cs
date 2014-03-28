@@ -9,14 +9,14 @@ namespace BuildCs.Zip
 {
     public static class Extensions
     {
-        public static ZipHelper ZipHelper(this IBuild build)
+        public static ZipHelper ZipHelper(this IBuildSession session)
         {
-            return build.GetService<ZipHelper>();
+            return session.GetService<ZipHelper>();
         }
 
-        public static void Zip(this IBuild build, BuildItem outputPath, Action<ZipArgs> config)
+        public static void Zip(this IBuildSession session, BuildItem outputPath, Action<ZipArgs> config)
         {
-            ZipHelper(build).Zip(outputPath, config);
+            ZipHelper(session).Zip(outputPath, config);
         }
     }
 }

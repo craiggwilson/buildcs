@@ -7,12 +7,15 @@ namespace BuildCs.Tracing
 {
     public class Tracer
     {
-        private readonly BuildContext _context;
+        private readonly IBuildSession _session;
 
-        public Tracer(BuildContext context)
+        public Tracer(IBuildSession session)
         {
-            _context = context;
+            Listeners = new List<IBuildListener>();
+            _session = session;
         }
+
+        public IList<IBuildListener> Listeners { get; private set; }
 
         public IDisposable StartBuild(BuildExecution build)
         {
@@ -59,7 +62,7 @@ namespace BuildCs.Tracing
 
         public void Write(MessageLevel type, string message, params object[] args)
         {
-            if (_context.Verbosity > type)
+            if (_session.Verbosity > type)
                 return;
 
             if (args != null && args.Length > 0)
@@ -69,7 +72,7 @@ namespace BuildCs.Tracing
 
         private void Publish(BuildEvent @event)
         {
-            _context.Listeners.Each(x => x.Handle(@event));
+            Listeners.Each(x => x.Handle(@event));
         }
 
         private class StartStop : IDisposable

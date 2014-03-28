@@ -5,33 +5,33 @@ namespace BuildCs.Targetting
 {
     public static class Extensions
     {
-        public static TargetManager TargetManager(this IBuild build)
+        public static TargetManager TargetManager(this IBuildSession session)
         {
-            return build.GetService<TargetManager>();
+            return session.GetService<TargetManager>();
         }
 
-        public static TargetRunner TargetRunner(this IBuild build)
+        public static TargetRunner TargetRunner(this IBuildSession session)
         {
-            return build.GetService<TargetRunner>();
+            return session.GetService<TargetRunner>();
         }
 
-        public static void Run(this IBuild build, params string[] targets)
+        public static void Run(this IBuildSession session, params string[] targets)
         {
-            build.TargetRunner().RunTargets(targets);
+            session.TargetRunner().Run();
         }
 
-        public static void RunTargetOrDefault(this IBuild build, string defaultTarget)
+        public static void RunTargetOrDefault(this IBuildSession session, string defaultTarget)
         {
-            var targetNames = build.Arguments().TargetNames;
-            if (targetNames.Count == 0)
-                targetNames = new[] { defaultTarget };
+            var runner = session.TargetRunner();
+            if (runner.TargetsToRun.Count == 0)
+                runner.TargetsToRun.Add(defaultTarget);
 
-            Run(build, targetNames.ToArray());
+            Run(session);
         }
 
-        public static ITargetBuilder Target(this IBuild build, string name)
+        public static ITargetBuilder Target(this IBuildSession session, string name)
         {
-            return build.TargetManager().AddTarget(name);
+            return session.TargetManager().AddTarget(name);
         }
 
         public static ITargetBuilder After(this ITargetBuilder builder, Action after)

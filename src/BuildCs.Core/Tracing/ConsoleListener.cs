@@ -10,7 +10,7 @@ namespace BuildCs.Tracing
     {
         private string _currentPrefix;
 
-        public ConsoleListener(BuildContext context)
+        public ConsoleListener(IBuildSession session) // required ctor...
         {
             _currentPrefix = "";
         }

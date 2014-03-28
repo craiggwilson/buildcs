@@ -9,19 +9,19 @@ namespace BuildCs.MsBuild
 {
     public static class Extensions
     {
-        public static MsBuildHelper MsBuildHelper(this IBuild build)
+        public static MsBuildHelper MsBuildHelper(this IBuildSession session)
         {
-            return build.GetService<MsBuildHelper>();
+            return session.GetService<MsBuildHelper>();
         }
 
-        public static void MsBuild(this IBuild build, BuildItem project, Action<MsBuildArgs> config = null)
+        public static void MsBuild(this IBuildSession session, BuildItem project, Action<MsBuildArgs> config = null)
         {
-            MsBuild(build, new[] { project }, config);
+            MsBuild(session, new[] { project }, config);
         }
 
-        public static void MsBuild(this IBuild build, IEnumerable<BuildItem> projects, Action<MsBuildArgs> config = null)
+        public static void MsBuild(this IBuildSession session, IEnumerable<BuildItem> projects, Action<MsBuildArgs> config = null)
         {
-            MsBuildHelper(build).Build(projects, config);
+            MsBuildHelper(session).Build(projects, config);
         }
     }
 }

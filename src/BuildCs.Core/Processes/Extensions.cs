@@ -10,31 +10,31 @@ namespace BuildCs.Processes
 {
     public static class Extensions
     {
-        public static ProcessHelper ProcessHelper(this IBuild build)
+        public static ProcessHelper ProcessHelper(this IBuildSession session)
         {
-            return build.GetService<ProcessHelper>();
+            return session.GetService<ProcessHelper>();
         }
 
-        public static int Exec(this IBuild build, string filename, string arguments)
+        public static int Exec(this IBuildSession session, string filename, string arguments)
         {
-            return Exec(build, filename, arguments, Timeout.InfiniteTimeSpan);
+            return Exec(session, filename, arguments, Timeout.InfiniteTimeSpan);
         }
 
-        public static int Exec(this IBuild build, string filename, string arguments, TimeSpan timeout)
+        public static int Exec(this IBuildSession session, string filename, string arguments, TimeSpan timeout)
         {
-            return Exec(build, config =>
+            return Exec(session, config =>
             {
                 config.StartInfo.FileName = filename;
                 config.StartInfo.Arguments = arguments;
                 config.Timeout = timeout;
-                config.OnErrorMessage = m => build.Tracer().Error(m);
-                config.OnOutputMessage = m => build.Tracer().Log(m);
+                config.OnErrorMessage = m => session.Tracer().Error(m);
+                config.OnOutputMessage = m => session.Tracer().Log(m);
             });
         }
 
-        public static int Exec(this IBuild build, Action<ProcessArgs> config)
+        public static int Exec(this IBuildSession session, Action<ProcessArgs> config)
         {
-            return ProcessHelper(build).Exec(config);
+            return ProcessHelper(session).Exec(config);
         }
     }
 }

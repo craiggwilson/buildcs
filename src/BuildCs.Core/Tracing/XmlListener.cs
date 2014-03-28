@@ -16,14 +16,14 @@ namespace BuildCs.Tracing
     {
         public static readonly string OutputPathParameterName = "XmlListener.filename";
 
-        private readonly BuildContext _context;
+        private readonly IBuildSession _session;
         private readonly Stack<Stopwatch> _stopwatchStack;
         private StringBuilder _buffer;
         private XmlWriter _writer;
 
-        public XmlListener(BuildContext context)
+        public XmlListener(IBuildSession session)
         {
-            _context = context;
+            _session = session;
             _stopwatchStack = new Stack<Stopwatch>();
         }
 
@@ -100,7 +100,7 @@ namespace BuildCs.Tracing
             _writer = null;
 
             string filename;
-            if (!_context.Parameters.TryGetValue(OutputPathParameterName, out filename))
+            if (!_session.Parameters.TryGetValue(OutputPathParameterName, out filename))
                 filename = "build-output.xml";
 
             File.WriteAllText(filename, _buffer.ToString());
