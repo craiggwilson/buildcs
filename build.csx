@@ -1,6 +1,3 @@
-using System.Xml.Linq;
-using System.Xml.XPath;
-
 var build = Require<Build>();
 
 var semVersion = build.SemVer("0.1.0");
@@ -23,11 +20,12 @@ build.Target("Clean")
         build.DeleteDirectory(artifactsDir);
     });
 
-build.Target("AssemblyInfo")
+build.Target("Build")
+    .DependsOn("Clean")
     .Do(() =>
     {
-
-
+        build.NugetRestorePackages();
+        
         build.GenerateCSharpAssemblyInfo(assemblyInfoFile, args =>
         {
             args.Attributes.Copyright("Copyright 2014 Craig Wilson");
@@ -36,13 +34,7 @@ build.Target("AssemblyInfo")
             args.Attributes.FileVersion(semVersion.ToVersion(buildNumber));
             args.Attributes.Configuration("Release");
         });
-    });
 
-build.Target("Build")
-    .DependsOn("Clean")
-    .Do(() =>
-    {
-        build.NugetRestorePackages();
         build.MsBuild(slnFile, args =>
         {
             args.AddProperty("OutputPath", binDir);
@@ -50,11 +42,23 @@ build.Target("Build")
             args.NoLogo = true;
             args.Verbosity = MsBuildVerbosity.Quiet;
         });
+
         build.GitExec(baseDir, "checkout {0}".F(assemblyInfoFile));
     });
 
-build.Target("NugetPack")
+build.Target("Test")
     .DependsOn("Build")
+    .Do(() =>
+    {
+        build.XUnit(binDir.Glob("*.Tests.dll"), args =>
+        {
+            args.NUnitXmlOutputPath = artifactsDir + "test-results.xml";
+            args.Verbose = false;
+        });
+    });
+
+build.Target("NugetPack")
+    .DependsOn("Test")
     .Do(() =>
     {
         // add dependency versions to all elements with BuildCs in them.
