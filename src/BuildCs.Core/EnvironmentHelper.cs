@@ -30,14 +30,14 @@ namespace BuildCs
 
         public bool ForceMono { get; set; }
 
-        public string GetEnvironmentVariable(string name)
+        public string GetVariable(string name)
         {
             return Environment.GetEnvironmentVariable(name);
         }
 
-        public string GetEnvironmentVariableOrDefault(string name, string defaultValue)
+        public string GetVariableOrDefault(string name, string defaultValue)
         {
-            return GetEnvironmentVariable(name) ?? defaultValue;
+            return GetVariable(name) ?? defaultValue;
         }
     }
 }
