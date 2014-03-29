@@ -74,7 +74,7 @@ namespace BuildCs
                         if(endNameIndex == -1)
                             throw new BuildCsException("Parameter argument is mal-formed. Correct formation is -p:<name>=<value>");
 
-                        name = argument.Substring(endTypeIndex + 1, endNameIndex - 1);
+                        name = argument.Substring(endTypeIndex + 1, endNameIndex - endTypeIndex - 1);
                         value = argument.Substring(endNameIndex + 1);
                         _parameters.Add(name, value);
                         break;
