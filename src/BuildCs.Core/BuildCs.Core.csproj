@@ -110,6 +110,8 @@
     <Compile Include="Tracing\ConsoleListener.cs" />
     <Compile Include="Tracing\XmlListener.cs" />
     <Compile Include="Tracing\StopBuildEvent.cs" />
+    <Compile Include="Xml\Extensions.cs" />
+    <Compile Include="Xml\XmlHelper.cs" />
     <Compile Include="XUnit\Extensions.cs" />
     <Compile Include="XUnit\XUnitArgs.cs" />
     <Compile Include="XUnit\XUnitHelper.cs" />

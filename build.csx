@@ -56,13 +56,11 @@ build.Target("NugetPack")
     .Do(() =>
     {
         // add dependency versions to all elements with BuildCs in them.
-        nuspecFiles.Each(f => 
+        build.XmlUpdate(nuspecFiles, doc =>
         {
-            var doc = XDocument.Load(f);
             doc.XPathSelectElements("/package/metadata/dependencies/dependency")
                 .Where(e => e.Attributes("id").Single().Value.Contains("BuildCs"))
                 .Each(e => e.SetAttributeValue("version", semVersion));
-            doc.Save(f);
         });
 
         build.NugetPack(nuspecFiles, args =>

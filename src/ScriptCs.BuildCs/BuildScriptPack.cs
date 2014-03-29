@@ -15,6 +15,8 @@ namespace ScriptCs.BuildCs
 
         public void Initialize(IScriptPackSession session)
         {
+            session.ImportNamespace("System.Xml.Linq");
+            session.ImportNamespace("System.Xml.XPath");
             session.ImportNamespace("ScriptCs.BuildCs");
             session.ImportNamespace("BuildCs");
             session.ImportNamespace("BuildCs.AssemblyInfo");
@@ -26,6 +28,7 @@ namespace ScriptCs.BuildCs
             session.ImportNamespace("BuildCs.Processes");
             session.ImportNamespace("BuildCs.Targetting");
             session.ImportNamespace("BuildCs.Tracing");
+            session.ImportNamespace("BuildCs.Xml");
             session.ImportNamespace("BuildCs.XUnit");
             session.ImportNamespace("BuildCs.Zip");
 
