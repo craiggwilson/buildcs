@@ -1,6 +1,6 @@
 var build = Require<Build>();
 
-var semVersion = build.SemVer("0.1.0");
+var semVersion = build.SemVer("0.1.1");
 var buildNumber = int.Parse(build.GetEnvironmentVariableOrDefault("BUILD_NUMBER", "0"));
 
 var baseDir = build.CurrentDirectory();
@@ -79,6 +79,16 @@ build.Target("NugetPack")
 
         // reset all the nuspec files...
         nuspecFiles.Each(f => build.GitExec(baseDir, "checkout {0}".F(f)));
+    });
+
+build.Target("NugetPush")
+    .PreCondition(() => build.DirectoryExists(artifactsDir) && artifactsDir.Glob("*.nupkg").Count() == nuspecFiles.Count() * 2, "Nuget packages were not found.")
+    .Do(() =>
+    {
+        build.NugetPush(artifactsDir.Glob("*.nupkg"), args =>
+        {
+            args.ApiKey = build.GetParameter("NugetApiKey");
+        });
     });
 
 build.RunTargetOrDefault("NugetPack");
