@@ -3,7 +3,7 @@ using System.Xml.XPath;
 
 var build = Require<Build>();
 
-var semVersion = "0.1.0";
+var semVersion = build.SemVer("0.1.0");
 
 var baseDir = build.CurrentDirectory();
 var srcDir = baseDir + "src";
@@ -26,12 +26,14 @@ build.Target("Clean")
 build.Target("AssemblyInfo")
     .Do(() =>
     {
+        
+
         build.GenerateCSharpAssemblyInfo(assemblyInfoFile, args =>
         {
             args.Attributes.Copyright("Copyright 2014 Craig Wilson");
-            args.Attributes.Version(new Version(0, 1, 0, 0)); //TODO: fix this
+            args.Attributes.Version(semVersion.ToVersion(0));
             args.Attributes.InformationalVersion(semVersion);
-            args.Attributes.FileVersion(new Version(0, 1, 0, 0)); //TODO: fix this
+            args.Attributes.FileVersion(semVersion.ToVersion(0));
             args.Attributes.Configuration("Release");
         });
     });

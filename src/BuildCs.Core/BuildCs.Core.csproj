@@ -80,6 +80,8 @@
     <Compile Include="BuildCsException.cs" />
     <Compile Include="Arguments.cs" />
     <Compile Include="EnvironmentHelper.cs" />
+    <Compile Include="SemVer\Extensions.cs" />
+    <Compile Include="SemVer\SemVersion.cs" />
     <Compile Include="Targetting\IBuildExecution.cs" />
     <Compile Include="Targetting\BuildExecutionStatus.cs" />
     <Compile Include="Targetting\TargetExecutionStatus.cs" />

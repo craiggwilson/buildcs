@@ -26,6 +26,7 @@ namespace ScriptCs.BuildCs
             session.ImportNamespace("BuildCs.Nuget");
             session.ImportNamespace("BuildCs.NUnit");
             session.ImportNamespace("BuildCs.Processes");
+            session.ImportNamespace("BuildCs.SemVer");
             session.ImportNamespace("BuildCs.Targetting");
             session.ImportNamespace("BuildCs.Tracing");
             session.ImportNamespace("BuildCs.Xml");
