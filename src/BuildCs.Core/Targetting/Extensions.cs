@@ -34,56 +34,30 @@ namespace BuildCs.Targetting
             return session.TargetManager().AddTarget(name);
         }
 
-        public static ITargetBuilder After(this ITargetBuilder builder, Action after)
+        public static ITargetBuilder Do(this ITargetBuilder builder, Action action)
         {
-            return builder.Wrap(next =>
-            {
-                next();
-                after();
-            });
+            return builder.Do(_ => action());
         }
 
-        public static ITargetBuilder Before(this ITargetBuilder builder, Action before)
+        public static ITargetBuilder PreCondition(this ITargetBuilder builder, Func<bool> predicate, string message = null)
         {
-            return builder.Wrap(next =>
-            {
-                before();
-                next();
-            });
-        }
-
-        public static ITargetBuilder Cleanup(this ITargetBuilder builder, Action cleanup)
-        {
-            return builder.Wrap(next =>
-            {
-                try
-                {
-                    next();
-                }
-                finally
-                {
-                    cleanup();
-                }
-            });
-        }
-
-        public static ITargetBuilder FailIf(this ITargetBuilder builder, Func<bool> predicate, string message = null)
-        {
-            return builder.Wrap(next =>
+            return builder.Wrap((target, next) =>
             {
                 if (predicate())
-                    throw new BuildCsFailTargetException(message);
-                next();
+                    target.MarkFailed(message, null);
+                else
+                    next(target);
             });
         }
 
         public static ITargetBuilder SkipIf(this ITargetBuilder builder, Func<bool> predicate, string message = null)
         {
-            return builder.Wrap(next =>
+            return builder.Wrap((target, next) =>
             {
                 if (predicate())
-                    throw new BuildCsSkipTargetException(message);
-                next();
+                    target.MarkSkipped(message);
+                else
+                    next(target);
             });
         }
     }

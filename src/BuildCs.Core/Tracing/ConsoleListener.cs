@@ -19,16 +19,15 @@ namespace BuildCs.Tracing
         {
             switch(@event.Type)
             {
+                case BuildEventType.Message:
+                    HandleMessage((MessageEvent)@event);
+                    break;
                 case BuildEventType.StartTarget:
-                    var name = ((StartTargetEvent)@event).Target.Name;
-                    _currentPrefix = "[{0}] ".F(name);
-                    Write(ConsoleColor.Green, "Starting at {0:HH:mm:ss}".F(DateTime.UtcNow));
-                    return;
+                    HandleStartTarget(((StartTargetEvent)@event).Target);
+                    break;
                 case BuildEventType.StopTarget:
-                    var duration = ((StopTargetEvent)@event).Target.Duration;
-                    Write(ConsoleColor.Green, "Finished in {0}".F(duration));
-                    _currentPrefix = "";
-                    return;
+                    HandleStopTarget(((StopTargetEvent)@event).Target);
+                    break;
                 case BuildEventType.StartTask:
                 case BuildEventType.StopTask:
                 case BuildEventType.StartBuild:
@@ -37,11 +36,44 @@ namespace BuildCs.Tracing
                     PrintSummary((StopBuildEvent)@event);
                     return;
             }
+        }
 
-            var message = (MessageEvent)@event;
+        private void HandleStartTarget(ITargetExecution target)
+        {
+            _currentPrefix = "[{0}] ".F(target.Name);
+            Write(ConsoleColor.Green, "Starting at {0:HH:mm:ss}".F(DateTime.UtcNow));
+        }
 
+        private void HandleStopTarget(ITargetExecution target)
+        {
+            var duration = target.Duration;
+            switch (target.Status)
+            {
+                case TargetExecutionStatus.Skipped:
+                    Write(ConsoleColor.Yellow, "Skipped. {0}".F(target.Message ?? "(no reason provided)"));
+                    break;
+                case TargetExecutionStatus.Failed:
+                    var message = target.Message;
+                    if (message != null && target.Exception != null)
+                        message += " " + target.Exception.ToString();
+                    else if (message == null && target.Exception != null)
+                        message = target.Exception.ToString();
+                    else
+                        message = "(no reason provided)";
+                    Write(ConsoleColor.Red, "Failed. {0}".F(message));
+                    break;
+                default:
+                    Write(ConsoleColor.Green, "Completed in {0}.".F(target.Duration));
+                    break;
+            }
+
+            _currentPrefix = "";
+        }
+
+        private void HandleMessage(MessageEvent @event)
+        {
             var color = ConsoleColor.DarkGray;
-            switch (message.Level)
+            switch (@event.Level)
             {
                 case MessageLevel.Log:
                     color = ConsoleColor.Gray;
@@ -57,12 +89,12 @@ namespace BuildCs.Tracing
                     break;
             }
 
-            Write(color, message.Message);
+            Write(color, @event.Message);
         }
 
         private void PrintSummary(StopBuildEvent @event)
         {
-            var maxLength = @event.Build.Targets.Max(x => x.Target.Name.Length);
+            var maxLength = @event.Build.Targets.Max(x => x.Name.Length);
             var anyFailed = @event.Build.Targets.Any(x => x.Status == TargetExecutionStatus.Failed);
             var color = ConsoleColor.Green;
             if (anyFailed)
@@ -74,22 +106,22 @@ namespace BuildCs.Tracing
             Write(color, "---------------------------------------------------------------------");
             Write(color, "Target".PadRight(maxLength) + "    Duration");
             Write(color, "------".PadRight(maxLength) + "    --------");
-            foreach(var context in @event.Build.Targets)
+            foreach(var target in @event.Build.Targets)
             {
-                var text = context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString();
-                switch(context.Status)
+                var text = target.Name.PadRight(maxLength + 4) + target.Duration.ToString();
+                switch(target.Status)
                 {
                     case TargetExecutionStatus.Failed:
-                        Write(ConsoleColor.Red, context.Target.Name.PadRight(maxLength + 4) + "Failed");
+                        Write(ConsoleColor.Red, target.Name.PadRight(maxLength + 4) + "Failed");
                         break;
                     case TargetExecutionStatus.NotRun:
-                        Write(ConsoleColor.DarkGray, context.Target.Name.PadRight(maxLength + 4) + "Not Run");
+                        Write(ConsoleColor.DarkGray, target.Name.PadRight(maxLength + 4) + "Not Run");
                         break;
                     case TargetExecutionStatus.Skipped:
-                        Write(ConsoleColor.Gray, context.Target.Name.PadRight(maxLength + 4) + "Skipped");
+                        Write(ConsoleColor.Yellow, target.Name.PadRight(maxLength + 4) + "Skipped");
                         break;
                     case TargetExecutionStatus.Success:
-                        Write(ConsoleColor.Green, context.Target.Name.PadRight(maxLength + 4) + context.Duration.ToString());
+                        Write(ConsoleColor.Green, target.Name.PadRight(maxLength + 4) + target.Duration.ToString());
                         break;
                 }
             }

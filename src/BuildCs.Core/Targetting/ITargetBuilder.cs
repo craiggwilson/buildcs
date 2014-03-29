@@ -8,8 +8,8 @@ namespace BuildCs.Targetting
 
         ITargetBuilder DependsOn(params string[] names);
 
-        ITargetBuilder Do(Action action);
+        ITargetBuilder Do(Action<ITargetExecution> action);
 
-        ITargetBuilder Wrap(Action<Action> action);
+        ITargetBuilder Wrap(Action<ITargetExecution, Action<ITargetExecution>> action);
     }
 }

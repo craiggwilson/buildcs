@@ -30,10 +30,10 @@ namespace ScriptCs.BuildCs
             session.ImportNamespace("BuildCs.Zip");
 
             var arguments = new Arguments(session.ScriptArgs);
-            if (arguments.Listeners.Count == 0)
-                arguments.AddListener(typeof(ConsoleListener).FullName);
-
             _build = new Build(new BuildSessionFactory().Create(arguments));
+            var tracer = _build.GetService<Tracer>();
+            if (tracer.Listeners.Count == 0)
+                tracer.Listeners.Add(new ConsoleListener(_build));
         }
 
         public void Terminate()

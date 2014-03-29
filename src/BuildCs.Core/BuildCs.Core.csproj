@@ -79,9 +79,7 @@
     <Compile Include="BuildCsException.cs" />
     <Compile Include="Arguments.cs" />
     <Compile Include="EnvironmentHelper.cs" />
-    <Compile Include="Targetting\BuildExecution.cs" />
-    <Compile Include="Targetting\BuildCsFailTargetException.cs" />
-    <Compile Include="Targetting\BuildCsSkipTargetException.cs" />
+    <Compile Include="Targetting\IBuildExecution.cs" />
     <Compile Include="Targetting\BuildExecutionStatus.cs" />
     <Compile Include="Targetting\TargetExecutionStatus.cs" />
     <Compile Include="Tracing\BuildEvent.cs" />
@@ -89,9 +87,8 @@
     <Compile Include="Tracing\MessageEvent.cs" />
     <Compile Include="Processes\ProcessHelper.cs" />
     <Compile Include="Processes\ProcessArgs.cs" />
-    <Compile Include="Targetting\Target.cs" />
     <Compile Include="Targetting\TargetManager.cs" />
-    <Compile Include="Targetting\TargetExecution.cs" />
+    <Compile Include="Targetting\ITargetExecution.cs" />
     <Compile Include="Targetting\TargetRunner.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Targetting\Extensions.cs" />

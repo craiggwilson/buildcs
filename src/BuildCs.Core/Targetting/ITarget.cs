@@ -10,6 +10,6 @@ namespace BuildCs.Targetting
 
         string Name { get; }
 
-        void Run();
+        void Run(ITargetExecution target);
     }
 }

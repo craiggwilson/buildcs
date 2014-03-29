@@ -17,16 +17,16 @@ namespace BuildCs.Tracing
 
         public IList<IBuildListener> Listeners { get; private set; }
 
-        public IDisposable StartBuild(BuildExecution build)
+        public IDisposable StartBuild(IBuildExecution build)
         {
             Publish(new StartBuildEvent(build));
             return new StartStop(this, new StopBuildEvent(build));
         }
 
-        public IDisposable StartTarget(BuildExecution build, TargetExecution target)
+        public IDisposable StartTarget(ITargetExecution target)
         {
-            Publish(new StartTargetEvent(build, target));
-            return new StartStop(this, new StopTargetEvent(build, target));
+            Publish(new StartTargetEvent(target));
+            return new StartStop(this, new StopTargetEvent(target));
         }
 
         public IDisposable StartTask(string name)
@@ -50,9 +50,9 @@ namespace BuildCs.Tracing
             Write(MessageLevel.Info, message, args);
         }
 
-        public void Important(string message, params object[] args)
+        public void Warning(string message, params object[] args)
         {
-            Write(MessageLevel.Info, message, args);
+            Write(MessageLevel.Warning, message, args);
         }
 
         public void Error(string message, params object[] args)

@@ -23,53 +23,125 @@ namespace BuildCs.Targetting
 
         public void Run()
         {
-            var chain = _targetManager
+            var build = new BuildExecution();
+            build.Targets = _targetManager
                 .GetBuildChain(TargetsToRun)
-                .Select(x => new TargetExecution(x))
+                .Select(x => new TargetExecution(build, x))
                 .ToList();
-
-            var build = new BuildExecution(chain);
 
             using (_tracer.StartBuild(build))
             {
-                foreach (var target in chain)
+                foreach (var target in build.Targets)
                 {
-                    Run(build, target);
+                    Run((TargetExecution)target);
                     if (target.Status == TargetExecutionStatus.Failed)
                         break;
                 }
             }
         }
 
-        private void Run(BuildExecution build, TargetExecution target)
+        private void Run(TargetExecution target)
         {
-            using (_tracer.StartTarget(build, target))
+            using (_tracer.StartTarget(target))
             {
                 var stopwatch = Stopwatch.StartNew();
                 try
                 {
-                    target.Target.Run();
-                    stopwatch.Stop();
-                    target.MarkSuccessful(stopwatch.Elapsed);
-                }
-                catch(BuildCsFailTargetException ex)
-                {
-                    stopwatch.Stop();
-                    target.MarkFailed(stopwatch.Elapsed, ex);
-                    _tracer.Error("Failed. {0}", ex.Message);
-                }
-                catch(BuildCsSkipTargetException ex)
-                {
-                    stopwatch.Stop();
-                    target.MarkSkipped(stopwatch.Elapsed);
-                    _tracer.Info("Skipped. {0}", ex.Message);
+                    target.Target.Run(target);
+                    if (target.Status == TargetExecutionStatus.NotRun)
+                        target.Status = TargetExecutionStatus.Success;
                 }
                 catch (Exception ex)
                 {
-                    stopwatch.Stop();
-                    target.MarkFailed(stopwatch.Elapsed, ex);
-                    _tracer.Error("Failed. {0}", ex);
+                    target.MarkFailed(null, ex);
                 }
+                finally
+                {
+                    stopwatch.Stop();
+                    target.Duration = stopwatch.Elapsed;
+                }
+            }
+        }
+
+        private class BuildExecution : IBuildExecution
+        {
+            public TimeSpan Duration
+            {
+                get
+                {
+                    return TimeSpan.FromTicks(Targets.Select(x => x.Duration)
+                        .DefaultIfEmpty(TimeSpan.Zero)
+                        .Sum(x => x.Ticks));
+                }
+            }
+
+            public Exception Exception
+            {
+                get
+                {
+                    return Targets.Select(x => x.Exception)
+                        .Where(x => x != null)
+                        .FirstOrDefault();
+                }
+            }
+
+            public BuildExecutionStatus Status
+            {
+                get
+                {
+                    var maxStatus = Targets.Select(x => x.Status)
+                        .DefaultIfEmpty(TargetExecutionStatus.NotRun)
+                        .Max();
+
+                    return (BuildExecutionStatus)maxStatus;
+                }
+            }
+
+            public IReadOnlyList<ITargetExecution> Targets { get; set; }
+        }
+
+        private class TargetExecution : ITargetExecution
+        {
+            public TargetExecution(BuildExecution build, ITarget target)
+            {
+                Build = build;
+                Duration = TimeSpan.Zero;
+                Target = target;
+            }
+
+            public IBuildExecution Build { get; set; }
+
+            public string Description
+            {
+                get { return Target.Description; }
+            }
+
+            public TimeSpan Duration { get; set; }
+
+            public Exception Exception { get; set; }
+
+            public string Message { get; set; }
+
+            public string Name
+            {
+                get { return Target.Name; }
+            }
+
+            public TargetExecutionStatus Status { get; set; }
+
+            public ITarget Target { get;  set; }
+
+            public void MarkFailed(string message, Exception exception)
+            {
+                Message = message;
+                Exception = exception;
+                Status = TargetExecutionStatus.Failed;
+            }
+
+            public void MarkSkipped(string message)
+            {
+                Message = message;
+                Status = TargetExecutionStatus.Skipped;
             }
         }
     }

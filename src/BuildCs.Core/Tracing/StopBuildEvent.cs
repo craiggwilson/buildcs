@@ -9,12 +9,12 @@ namespace BuildCs.Tracing
 {
     public class StopBuildEvent : BuildEvent
     {
-        public StopBuildEvent(BuildExecution build)
+        public StopBuildEvent(IBuildExecution build)
         {
             Build = build;
         }
 
-        public BuildExecution Build { get; private set; }
+        public IBuildExecution Build { get; private set; }
 
         public override BuildEventType Type
         {

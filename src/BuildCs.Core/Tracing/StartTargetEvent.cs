@@ -9,15 +9,12 @@ namespace BuildCs.Tracing
 {
     public class StartTargetEvent : BuildEvent
     {
-        public StartTargetEvent(BuildExecution build, TargetExecution target)
+        public StartTargetEvent(ITargetExecution target)
         {
-            Build = build;
             Target = target;
         }
 
-        public BuildExecution Build { get; private set; }
-
-        public TargetExecution Target { get; private set; }
+        public ITargetExecution Target { get; private set; }
 
         public override BuildEventType Type
         {

@@ -47,6 +47,7 @@ namespace BuildCs
                 _services.Add(typeof(TargetManager), targetManager);
                 var targetRunner = new TargetRunner(targetManager, tracer);
                 _services.Add(typeof(TargetRunner), targetRunner);
+                arguments.TargetNames.Each(t => targetRunner.TargetsToRun.Add(t));
             }
 
             public IDictionary<string, string> Parameters { get; private set; }
