@@ -1,5 +1,7 @@
-var build = Require<Build>();
+using System.Xml.Linq;
+using System.Xml.XPath;
 
+var build = Require<Build>();
 
 var semVersion = "0.1.0";
 
@@ -9,8 +11,9 @@ var artifactsDir = baseDir + "artifacts";
 var binDir = artifactsDir + "bin";
 
 var assemblyInfoFile = srcDir + "GlobalAssemblyInfo.cs";
-var nuspecFiles = baseDir.Glob("*.nuspec");
+var nuspecFiles = srcDir.Glob("**/*.nuspec");
 var slnFile = srcDir + "BuildCs.sln";
+
 
 build.Parameters[XmlListener.OutputPathParameterName] = artifactsDir + "build-results.xml";
 
@@ -18,7 +21,6 @@ build.Target("Clean")
     .Do(() => 
     {
         build.DeleteDirectory(artifactsDir);
-        build.GitExec(baseDir, "checkout {0}".F(assemblyInfoFile));
     });
 
 build.Target("AssemblyInfo")
@@ -46,18 +48,33 @@ build.Target("Build")
             args.NoLogo = true;
             args.Verbosity = MsBuildVerbosity.Quiet;
         });
+        build.GitExec(baseDir, "checkout {0}".F(assemblyInfoFile));
     });
 
 build.Target("NugetPack")
     .DependsOn("Build")
     .Do(() =>
     {
+        // add dependency versions to all elements with BuildCs in them.
+        nuspecFiles.Each(f => 
+        {
+            var doc = XDocument.Load(f);
+            doc.XPathSelectElements("/package/metadata/dependencies/dependency")
+                .Where(e => e.Attributes("id").Single().Value.Contains("BuildCs"))
+                .Each(e => e.SetAttributeValue("version", semVersion));
+            doc.Save(f);
+        });
+
         build.NugetPack(nuspecFiles, args =>
         {
+            args.BasePath = baseDir;
             args.OutputDirectory = artifactsDir;
             args.Symbols = true;
             args.Version = semVersion;
         });
+
+        // reset all the nuspec files...
+        nuspecFiles.Each(f => build.GitExec(baseDir, "checkout {0}".F(f)));
     });
 
 build.RunTargetOrDefault("NugetPack");
