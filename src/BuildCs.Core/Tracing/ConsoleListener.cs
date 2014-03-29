@@ -58,7 +58,7 @@ namespace BuildCs.Tracing
                         message += " " + target.Exception.ToString();
                     else if (message == null && target.Exception != null)
                         message = target.Exception.ToString();
-                    else
+                    else if(message == null)
                         message = "(no reason provided)";
                     Write(ConsoleColor.Red, "Failed. {0}".F(message));
                     break;

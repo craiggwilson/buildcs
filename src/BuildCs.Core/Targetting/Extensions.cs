@@ -43,7 +43,7 @@ namespace BuildCs.Targetting
         {
             return builder.Wrap((target, next) =>
             {
-                if (predicate())
+                if (!predicate())
                     target.MarkFailed(message, null);
                 else
                     next(target);
