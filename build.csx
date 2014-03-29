@@ -28,11 +28,11 @@ build.Target("AssemblyInfo")
     {
         build.GenerateCSharpAssemblyInfo(assemblyInfoFile, args =>
         {
-            args.AddAssemblyCopyrightAttribute("Copyright 2014 Craig Wilson");
-            args.AddAssemblyVersionAttribute(new Version(0, 1, 0, 0)); //TODO: fix this
-            args.AddAssemblyInformationalVersionAttribute(semVersion);
-            args.AddAssemblyFileVersionAttribute(new Version(0, 1, 0, 0)); //TODO: fix this
-            args.AddAssemblyConfigurationAttribute("Release");
+            args.Attributes.Copyright("Copyright 2014 Craig Wilson");
+            args.Attributes.Version(new Version(0, 1, 0, 0)); //TODO: fix this
+            args.Attributes.InformationalVersion(semVersion);
+            args.Attributes.FileVersion(new Version(0, 1, 0, 0)); //TODO: fix this
+            args.Attributes.Configuration("Release");
         });
     });
 

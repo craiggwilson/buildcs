@@ -48,13 +48,14 @@
     </Compile>
     <Compile Include="AssemblyInfo\AssemblyInfoAttribute.cs" />
     <Compile Include="AssemblyInfo\AssemblyInfoHelper.cs" />
-    <Compile Include="AssemblyInfo\Extensions.cs" />
+    <Compile Include="AssemblyInfo\AttributesBuilder.cs" />
+    <Compile Include="FileSystem\Extensions.cs" />
     <Compile Include="AssemblyInfo\GenerateArgs.cs" />
     <Compile Include="BuildServer\BuildServerHelper.cs" />
     <Compile Include="BuildServer\BuildServerType.cs" />
     <Compile Include="FileSystem\BuildGlob.cs" />
     <Compile Include="FileSystem\BuildItem.cs" />
-    <Compile Include="FileSystem\Extensions.cs" />
+    <Compile Include="AssemblyInfo\Extensions.cs" />
     <Compile Include="FileSystem\FileSystemHelper.cs" />
     <Compile Include="Git\Extensions.cs" />
     <Compile Include="Git\GitHelper.cs" />
