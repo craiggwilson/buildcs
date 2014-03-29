@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>buildcs.core</id>
+    <id>BuildCs.Core</id>
     <version>0.0.0</version>
     <title>BuildCs Core</title>
     <authors>Craig Wilson</authors>
