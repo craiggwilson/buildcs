@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BuildCs.Environment;
 using BuildCs.Tracing;
 
 namespace BuildCs.FileSystem

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BuildCs.Environment;
 using BuildCs.FileSystem;
 using BuildCs.Processes;
 using BuildCs.Tracing;
@@ -112,7 +113,7 @@ namespace BuildCs.MsBuild
             if(_environment.IsMono)
                 return "xbuild";
 
-            var ev = Environment.GetEnvironmentVariable("MSBuild");
+            var ev = _environment.GetVariableOrDefault("MSBuild", null);
             if(!string.IsNullOrEmpty(ev))
                 return ev;
 

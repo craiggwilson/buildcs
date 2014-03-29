@@ -49,10 +49,9 @@
     <Compile Include="AssemblyInfo\AssemblyInfoAttribute.cs" />
     <Compile Include="AssemblyInfo\AssemblyInfoHelper.cs" />
     <Compile Include="AssemblyInfo\AttributesBuilder.cs" />
+    <Compile Include="Environment\Extensions.cs" />
     <Compile Include="FileSystem\Extensions.cs" />
     <Compile Include="AssemblyInfo\GenerateArgs.cs" />
-    <Compile Include="BuildServer\BuildServerHelper.cs" />
-    <Compile Include="BuildServer\BuildServerType.cs" />
     <Compile Include="FileSystem\BuildGlob.cs" />
     <Compile Include="FileSystem\BuildItem.cs" />
     <Compile Include="AssemblyInfo\Extensions.cs" />
@@ -79,7 +78,7 @@
     <Compile Include="Processes\Extensions.cs" />
     <Compile Include="BuildCsException.cs" />
     <Compile Include="Arguments.cs" />
-    <Compile Include="EnvironmentHelper.cs" />
+    <Compile Include="Environment\EnvironmentHelper.cs" />
     <Compile Include="SemVer\Extensions.cs" />
     <Compile Include="SemVer\SemVersion.cs" />
     <Compile Include="Targetting\IBuildExecution.cs" />

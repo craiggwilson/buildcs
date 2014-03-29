@@ -11,7 +11,7 @@ namespace BuildCs.FileSystem
     {
         public static string ExpandPath(string path)
         {
-            return Environment.ExpandEnvironmentVariables(path);
+            return System.Environment.ExpandEnvironmentVariables(path);
         }
 
         public static string NormalizePath(string path)

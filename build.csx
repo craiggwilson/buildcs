@@ -4,6 +4,7 @@ using System.Xml.XPath;
 var build = Require<Build>();
 
 var semVersion = build.SemVer("0.1.0");
+var buildNumber = int.Parse(build.GetEnvironmentVariableOrDefault("BUILD_NUMBER", "0"));
 
 var baseDir = build.CurrentDirectory();
 var srcDir = baseDir + "src";
@@ -13,7 +14,6 @@ var binDir = artifactsDir + "bin";
 var assemblyInfoFile = srcDir + "GlobalAssemblyInfo.cs";
 var nuspecFiles = srcDir.Glob("**/*.nuspec");
 var slnFile = srcDir + "BuildCs.sln";
-
 
 build.Parameters[XmlListener.OutputPathParameterName] = artifactsDir + "build-results.xml";
 
@@ -26,14 +26,14 @@ build.Target("Clean")
 build.Target("AssemblyInfo")
     .Do(() =>
     {
-        
+
 
         build.GenerateCSharpAssemblyInfo(assemblyInfoFile, args =>
         {
             args.Attributes.Copyright("Copyright 2014 Craig Wilson");
-            args.Attributes.Version(semVersion.ToVersion(0));
+            args.Attributes.Version(semVersion.ToVersion(buildNumber));
             args.Attributes.InformationalVersion(semVersion);
-            args.Attributes.FileVersion(semVersion.ToVersion(0));
+            args.Attributes.FileVersion(semVersion.ToVersion(buildNumber));
             args.Attributes.Configuration("Release");
         });
     });

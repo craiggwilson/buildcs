@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BuildCs.Environment;
 using BuildCs.FileSystem;
 using BuildCs.Processes;
 using BuildCs.Tracing;
@@ -62,7 +63,7 @@ namespace BuildCs.Git
             if (_environment.IsLinux)
                 return "git";
 
-            var ev = Environment.GetEnvironmentVariable("GIT");
+            var ev = _environment.GetVariableOrDefault("GIT", null);
             if (!string.IsNullOrEmpty(ev))
                 return ev;
 

@@ -20,6 +20,7 @@ namespace ScriptCs.BuildCs
             session.ImportNamespace("ScriptCs.BuildCs");
             session.ImportNamespace("BuildCs");
             session.ImportNamespace("BuildCs.AssemblyInfo");
+            session.ImportNamespace("BuildCs.Environment");
             session.ImportNamespace("BuildCs.FileSystem");
             session.ImportNamespace("BuildCs.Git");
             session.ImportNamespace("BuildCs.MsBuild");
