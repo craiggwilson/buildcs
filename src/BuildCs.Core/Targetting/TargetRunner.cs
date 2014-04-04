@@ -8,11 +8,13 @@ namespace BuildCs.Targetting
 {
     public class TargetRunner
     {
+        private readonly IBuildSession _session;
         private readonly TargetManager _targetManager;
         private readonly Tracer _tracer;
 
-        public TargetRunner(TargetManager targetManager, Tracer tracer)
+        public TargetRunner(IBuildSession session, TargetManager targetManager, Tracer tracer)
         {
+            _session = session;
             _targetManager = targetManager;
             _tracer = tracer;
 
@@ -23,7 +25,7 @@ namespace BuildCs.Targetting
 
         public void Run()
         {
-            var build = new BuildExecution();
+            var build = new BuildExecution { Session = _session };
             build.Targets = _targetManager
                 .GetBuildChain(TargetsToRun)
                 .Select(x => new TargetExecution(build, x))
@@ -84,6 +86,8 @@ namespace BuildCs.Targetting
                         .FirstOrDefault();
                 }
             }
+
+            public IBuildSession Session { get; set; }
 
             public BuildExecutionStatus Status
             {

@@ -27,6 +27,11 @@ namespace ScriptCs.BuildCs
             get { return _inner.Verbosity; }
             set { _inner.Verbosity = value; }
         }
+        
+        public void Dispose()
+        {
+            _inner.Dispose();
+        }
 
         public T GetService<T>()
         {

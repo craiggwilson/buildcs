@@ -43,7 +43,7 @@ namespace ScriptCs.BuildCs
 
         public void Terminate()
         {
-            
+            _build.Dispose();
         }
     }
 }

@@ -45,7 +45,7 @@ namespace BuildCs
 
                 var targetManager = new TargetManager();
                 _services.Add(typeof(TargetManager), targetManager);
-                var targetRunner = new TargetRunner(targetManager, tracer);
+                var targetRunner = new TargetRunner(this, targetManager, tracer);
                 _services.Add(typeof(TargetRunner), targetRunner);
                 arguments.TargetNames.Each(t => targetRunner.TargetsToRun.Add(t));
             }
@@ -53,6 +53,16 @@ namespace BuildCs
             public IDictionary<string, string> Parameters { get; private set; }
 
             public MessageLevel Verbosity { get; set; }
+
+            public void Dispose()
+            {
+                _services.Values
+                    .OfType<IDisposable>()
+                    .Where(x => !Object.ReferenceEquals(this, x))
+                    .Each(x => x.Dispose());
+
+                _services.Clear();
+            }
 
             public T GetService<T>()
             {

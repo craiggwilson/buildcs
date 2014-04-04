@@ -12,6 +12,8 @@ namespace BuildCs.Targetting
 
         Exception Exception { get; }
 
+        IBuildSession Session { get; }
+
         BuildExecutionStatus Status { get; }
 
         IReadOnlyList<ITargetExecution> Targets { get; }

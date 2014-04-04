@@ -10,7 +10,7 @@ namespace BuildCs
     /// <summary>
     /// Root object for a build.  Provides access to singleton services.
     /// </summary>
-    public interface IBuildSession
+    public interface IBuildSession : IDisposable
     {
         IDictionary<string, string> Parameters { get; }
 
