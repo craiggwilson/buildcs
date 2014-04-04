@@ -75,6 +75,8 @@
     <Compile Include="NUnit\Extensions.cs" />
     <Compile Include="NUnit\NUnitHelper.cs" />
     <Compile Include="NUnit\NUnitArgs.cs" />
+    <Compile Include="Processes\LaunchArgs.cs" />
+    <Compile Include="Processes\ProcessArgsBase.cs" />
     <Compile Include="Processes\Extensions.cs" />
     <Compile Include="BuildCsException.cs" />
     <Compile Include="Arguments.cs" />
@@ -88,7 +90,7 @@
     <Compile Include="Tracing\BuildEventType.cs" />
     <Compile Include="Tracing\MessageEvent.cs" />
     <Compile Include="Processes\ProcessHelper.cs" />
-    <Compile Include="Processes\ProcessArgs.cs" />
+    <Compile Include="Processes\ExecArgs.cs" />
     <Compile Include="Targetting\TargetManager.cs" />
     <Compile Include="Targetting\ITargetExecution.cs" />
     <Compile Include="Targetting\TargetRunner.cs" />

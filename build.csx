@@ -1,3 +1,5 @@
+using BuildCs.MongoDB;
+
 var build = Require<Build>();
 
 var semVersion = build.SemVer("0.1.1");
@@ -20,12 +22,22 @@ build.Target("Clean")
         build.DeleteDirectory(artifactsDir);
     });
 
+build.Target("TestMongo")
+    .RequiresStandaloneMongoDB(args =>
+    {
+        args.BinDir = @"C:\MongoDB\mongodb-win32-x86_64-2008plus-2.6.0-rc1\bin";
+    })
+    .Do(() =>
+    {
+        build.Log("MongoDB should be running.");
+    });
+
 build.Target("Build")
     .DependsOn("Clean")
     .Do(() =>
     {
         build.NugetRestorePackages();
-        
+
         build.GenerateCSharpAssemblyInfo(assemblyInfoFile, args =>
         {
             args.Attributes.Copyright("Copyright 2014 Craig Wilson");
