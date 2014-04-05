@@ -23,24 +23,19 @@ namespace BuildCs.Processes
 
         public bool TraceProcesses { get; set; }
 
-        public int Exec(Action<ExecArgs> config)
+        public int Exec(Action<ProcessArgs> config)
         {
-            TimeSpan timeout = Timeout.InfiniteTimeSpan;
-            var launchResult = (LaunchResult)Launch(args =>
-            {
-                var execArgs = new ExecArgs(args.StartInfo);
-                config(execArgs);
-                timeout = execArgs.Timeout;
-            });
-
-            return launchResult.Dispose(timeout);
+            var launchResult = (LaunchResult)Launch(config);
+            return launchResult.Kill();
         }
 
-        public IDisposable Launch(Action<LaunchArgs> config)
+        public IDisposable Launch(Action<ProcessArgs> config)
         {
             var process = new Process();
             process.StartInfo.UseShellExecute = false;
-            var args = new LaunchArgs(process.StartInfo);
+            var args = new ProcessArgs(process.StartInfo);
+            args.TraceOutput = true;
+            args.Timeout = Timeout.InfiniteTimeSpan;
             args.OnErrorMessage = m => _tracer.Error(m);
             args.OnOutputMessage = m => _tracer.Trace(m);
             config(args);
@@ -83,7 +78,7 @@ namespace BuildCs.Processes
                 _tracer.Error("Start of process '{0} {1}' failed. {2}", process.StartInfo.FileName, process.StartInfo.Arguments, ex);
             }
 
-            return new LaunchResult(process, _tracer, task);
+            return new LaunchResult(args, process, _tracer, task);
         }
 
         public void SetMonoPath(string path)
@@ -107,13 +102,15 @@ namespace BuildCs.Processes
 
         private class LaunchResult : IDisposable
         {
+            private readonly ProcessArgs _args;
             private readonly Process _process;
             private readonly Tracer _tracer;
             private readonly IDisposable _tracerTask;
             private bool _disposed;
 
-            public LaunchResult(Process process, Tracer tracer, IDisposable tracerTask)
+            public LaunchResult(ProcessArgs args, Process process, Tracer tracer, IDisposable tracerTask)
             {
+                _args = args;
                 _process = process;
                 _tracer = tracer;
                 _tracerTask = tracerTask;
@@ -121,17 +118,20 @@ namespace BuildCs.Processes
 
             public void Dispose()
             {
-                Dispose(TimeSpan.Zero);
+                Kill();
             }
 
-            public int Dispose(TimeSpan timeout)
+            public int Kill()
             {
                 if (_disposed)
                     return _process.ExitCode;
 
                 using(_tracerTask)
                 {
-                    if (!_process.WaitForExit(timeout.Milliseconds))
+                    if(_args.KillAction != null)
+                        _args.KillAction();
+                    
+                    if (!_process.WaitForExit(_args.Timeout.Milliseconds))
                     {
                         try
                         {
@@ -139,10 +139,10 @@ namespace BuildCs.Processes
                         }
                         catch (Exception ex)
                         {
-                            _tracer.Error("Could not kill process '{0} {1}' after '{1}' milliseconds. {2}", _process.StartInfo.FileName, _process.StartInfo.Arguments, timeout.Milliseconds, ex);
+                            _tracer.Error("Could not kill process '{0} {1}' after '{1}' milliseconds. {2}", _process.StartInfo.FileName, _process.StartInfo.Arguments, _args.Timeout.Milliseconds, ex);
                         }
 
-                        if(timeout != TimeSpan.Zero)
+                        if(_args.Timeout != TimeSpan.Zero)
                             throw new BuildCsException("Process '{0} {1}' timed out.".F(_process.StartInfo.FileName, _process.StartInfo.Arguments));
                     }
                 }

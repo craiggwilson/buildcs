@@ -23,12 +23,10 @@ namespace BuildCs.MongoDB
         {
             return target.Wrap((ex, next) =>
             {
-                Console.WriteLine("Here");
                 using(ex.Build.Session.LaunchStandAloneMongoDB(config))
                 {
                     next(ex);
                 }
-                Console.WriteLine("There");
             });
         }
     }

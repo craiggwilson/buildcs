@@ -8,5 +8,10 @@ namespace BuildCs.MongoDB
 {
     public class StandAloneArgs : MongoDBArgsBase
     {
+        public BuildItem DataDir { get; set; }
+
+        public int? OplogSize { get; set; }
+
+        public bool SmallFiles { get; set; }
     }
 }

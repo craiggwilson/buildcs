@@ -32,7 +32,7 @@ namespace BuildCs.Processes
             });
         }
 
-        public static int Exec(this IBuildSession session, Action<ExecArgs> config)
+        public static int Exec(this IBuildSession session, Action<ProcessArgs> config)
         {
             return ProcessHelper(session).Exec(config);
         }

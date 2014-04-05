@@ -26,10 +26,13 @@ build.Target("TestMongo")
     .RequiresStandaloneMongoDB(args =>
     {
         args.BinDir = @"C:\MongoDB\mongodb-win32-x86_64-2008plus-2.6.0-rc1\bin";
+        args.DataDir = artifactsDir + "data";
+        args.LogPath = args.DataDir + "log.txt";
     })
     .Do(() =>
     {
         build.Log("MongoDB should be running.");
+        Console.ReadKey();
     });
 
 build.Target("Build")

@@ -57,6 +57,12 @@ namespace BuildCs.FileSystem
             return Directory.Exists(item);
         }
 
+        public BuildItem GetDirectoryOfFile(BuildItem file)
+        {
+            var fi = new FileInfo(file);
+            return fi.Directory.FullName;
+        }
+
         public bool FileExists(BuildItem item)
         {
             return File.Exists(item);

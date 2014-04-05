@@ -10,6 +10,8 @@ namespace BuildCs.MongoDB
     {
         public BuildItem BinDir { get; set; }
 
-        public int? Port { get; set; }
+        public BuildItem LogPath { get; set; }
+
+        public int Port { get; set; }
     }
 }
